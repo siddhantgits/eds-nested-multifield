@@ -47,16 +47,17 @@
                     "name": "columns",
                     "label": "Footer Columns",
                     "multi": true,
+                    "composite": true,
                     "fields": [
                         {
                             "component": "text",
                             "valueType": "string",
-                            "name": "columns/title",
+                            "name": "title",
                             "label": "Column Title"
                         },
                         {
                             "component": "aem-content",
-                            "name": "columns/links",
+                            "name": "links",
                             "label": "Column Links",
                             "multi": true
                         }
