@@ -1,57 +1,135 @@
+/**
+ * ============================================================
+ *  FOOTER BLOCK — EDS / Universal Editor
+ * ============================================================
+ *
+ * HOW EDS RENDERS THIS BLOCK
+ * ─────────────────────────────────────────────────────────────
+ * EDS converts every block to an HTML table. Each field in the
+ * component model becomes one ROW. The block's HTML looks like:
+ *
+ *  <div class="footer block">
+ *    <div>                      ROW 0 → "logo" (reference field → <picture><img>)
+ *      <div><picture>…</picture></div>
+ *    </div>
+ *    <div>                      ROW 1 → "logoAlt" (text field)
+ *      <div>alt text here</div>
+ *    </div>
+ *    <div>                      ROW 2 → "tagline" (richtext field)
+ *      <div><p>Tagline text</p></div>
+ *    </div>
+ *    <div>                      ROW 3 → "columns" (COMPOSITE MULTIFIELD)
+ *      <div>
+ *        ALL column items land in ONE cell, separated by <hr> tags:
+ *
+ *        <hr>
+ *        <p>Products</p>          ← "title" text field of column #1
+ *        <ul>                     ← "links" aem-content multi of column #1
+ *          <li><a href="…">Link A</a></li>
+ *          <li><a href="…">Link B</a></li>
+ *        </ul>
+ *        <hr>
+ *        <p>Company</p>           ← "title" of column #2
+ *        <ul>
+ *          <li><a href="…">About</a></li>
+ *        </ul>
+ *        <hr>
+ *      </div>
+ *    </div>
+ *    <div>                      ROW 4 → "copyright" (text field)
+ *      <div>© 2024 My Company</div>
+ *    </div>
+ *  </div>
+ *
+ * ─────────────────────────────────────────────────────────────
+ * ABOUT FIELD NAMES (name property)
+ * ─────────────────────────────────────────────────────────────
+ * In EDS component-models.json, field names are always SIMPLE FLAT strings:
+ *   "name": "title"     ✅ correct
+ *   "name": "links"     ✅ correct
+ *
+ * The JCR path notation ("teaser/image/fileReference") is from AEM's old
+ * Coral UI dialogs and is NOT used in EDS Universal Editor models.
+ * Inside a composite container (multi:true), each sub-field simply uses
+ * its own flat "name". The system handles JCR storage paths automatically.
+ */
+
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 
 /**
- * Parses footer columns from the block's composite multifield table rows.
+ * Splits the composite multifield cell into individual column objects.
  *
- * Structure from EDS rendering:
- *  - Outer columns: composite container (multi:true) → each column renders as a
- *    <hr>-separated block with two cells:
- *      cell[0] = columnTitle (text)
- *      cell[1] = links (aem-content, multi:true) → rendered as <ul><li><a></a></li>...</ul>
+ * A composite multifield packs ALL items into ONE cell separated by <hr>.
+ * Each item section contains:
+ *   - <p>…</p>  → the "title" (text field)
+ *   - <ul>…</ul> → the "links" (aem-content + multi:true)
  *
- * @param {Element} block
+ * To DEBUG: open Browser DevTools → Console. Look for "[Footer]" messages.
+ * Also open the Elements tab and inspect the footer's raw div rows to see
+ * exactly what EDS rendered before this function ran.
+ *
+ * @param {Element} cell - The DOM element holding the composite multifield HTML
  * @returns {Array<{title: string, links: Array<{text: string, href: string}>}>}
  */
-function parseFooterColumns(block) {
-  const columns = [];
+function parseColumns(cell) {
+  // Split the cell's HTML on every <hr> tag.
+  // innerHTML gives us the raw HTML string; split() cuts it into pieces.
+  // Each piece is one column's content (title + links).
+  const parts = cell.innerHTML
+    .split(/<hr\s*\/?>/) // matches <hr>, <hr/>, <hr />
+    .map((p) => p.trim()) // remove leading/trailing whitespace
+    .filter((p) => p.length > 0); // drop empty strings
 
-  // EDS renders composite multifield items as sibling <div> rows separated by <hr>
-  // OR as direct child <div> rows in the block depending on version.
-  // Handle both: look for rows in the block.
-  const rows = [...block.querySelectorAll(':scope > div')];
-  rows.forEach((row) => {
-    const cells = [...row.querySelectorAll(':scope > div')];
-    if (cells.length < 2) return;
+  // Convert each HTML piece into a structured { title, links } object
+  return parts
+    .map((part) => {
+      // Create a throw-away <div> to parse the piece as real DOM nodes
+      const temp = document.createElement('div');
+      temp.innerHTML = part;
 
-    const titleCell = cells[0];
-    const linksCell = cells[1];
-    const title = titleCell.textContent.trim();
+      // ── "title" field ──────────────────────────────────────────
+      // The text field renders as a <p> element.
+      // We grab the FIRST <p> in this section as the column title.
+      const titleEl = temp.querySelector('p');
+      const title = titleEl ? titleEl.textContent.trim() : '';
+      if (titleEl) titleEl.remove(); // remove it so it won't appear in links
 
-    // aem-content with multi:true renders as <ul><li><a href="...">text</a></li></ul>
-    const links = [];
-    const listItems = linksCell.querySelectorAll('li');
-    listItems.forEach((li) => {
-      const anchor = li.querySelector('a');
-      if (anchor) {
-        links.push({ text: anchor.textContent.trim(), href: anchor.href });
-      } else {
-        const text = li.textContent.trim();
-        if (text) links.push({ text, href: '#' });
-      }
-    });
+      // ── "links" field (aem-content + multi:true) ───────────────
+      // aem-content with multi:true renders as <ul><li><a href="…">text</a></li></ul>
+      // Each <li> is one URL the author picked in UE.
+      const links = [];
+      temp.querySelectorAll('li').forEach((li) => {
+        const anchor = li.querySelector('a');
+        if (anchor) {
+          links.push({
+            text: anchor.textContent.trim(), // the visible label of the link
+            href: anchor.href, // the full URL (browser resolves relative paths)
+          });
+        }
+      });
 
-    if (title || links.length > 0) {
-      columns.push({ title, links });
-    }
-  });
-
-  return columns;
+      return { title, links };
+    })
+    .filter((col) => col.title || col.links.length > 0); // remove empty items
 }
 
 /**
- * Builds the footer columns nav element from parsed column data.
- * @param {Array} columns
+ * Creates the visual footer columns navigation from parsed data.
+ *
+ * Output structure:
+ *   <nav class="footer-columns">
+ *     <div class="footer-column">
+ *       <h3 class="footer-column-title">Products</h3>
+ *       <ul class="footer-column-links">
+ *         <li><a href="/p1">Link A</a></li>
+ *         <li><a href="/p2">Link B</a></li>
+ *       </ul>
+ *     </div>
+ *     … more columns …
+ *   </nav>
+ *
+ * @param {Array} columns - From parseColumns()
  * @returns {Element}
  */
 function buildColumnsNav(columns) {
@@ -63,6 +141,7 @@ function buildColumnsNav(columns) {
     const col = document.createElement('div');
     col.className = 'footer-column';
 
+    // Column heading <h3>
     if (title) {
       const heading = document.createElement('h3');
       heading.className = 'footer-column-title';
@@ -70,6 +149,7 @@ function buildColumnsNav(columns) {
       col.append(heading);
     }
 
+    // Links list <ul>
     if (links.length > 0) {
       const ul = document.createElement('ul');
       ul.className = 'footer-column-links';
@@ -91,122 +171,125 @@ function buildColumnsNav(columns) {
 }
 
 /**
- * loads and decorates the footer
- * Supports two authoring paths:
- *  1. Fragment-based (classic / no UE content): loads /footer as a fragment
- *  2. Universal Editor authored: parses composite multifield rows from the block
- * @param {Element} block The footer block element
+ * EDS calls this function automatically when it finds a block with class "footer".
+ * The `block` parameter is the <div class="footer block"> DOM element.
+ *
+ * HOW THE STANDARD FOOTER WORKS IN EDS
+ * ─────────────────────────────────────
+ * The boilerplate footer is NOT authored per-page. Instead:
+ *   1. scripts.js auto-adds an empty "footer" block to every page
+ *   2. decorate() loads the /footer PAGE as a "fragment" (an HTML snippet)
+ *   3. That /footer page IS authored via Universal Editor with this block model
+ *
+ * So flow is:  Page loads → empty footer block → decorate() → fetches /footer → renders content
+ *
+ * When authoring ON the /footer page itself in Universal Editor, the block
+ * DOES have content in its rows. So we still need to handle both cases.
+ *
+ * DEBUGGING TIP: Open the browser at localhost:3000, open DevTools → Elements,
+ * find the <footer> element. Look at its inner HTML BEFORE this function runs
+ * to understand the raw row structure. Add ?debug to the URL for extra EDS logs.
+ *
+ * @param {Element} block - The footer block DOM element
  */
 export default async function decorate(block) {
-  // Detect UE-authored content: block has child rows with content
+  // ──────────────────────────────────────────────────────────────
+  // DETECT: Does this block have UE-authored content in its rows?
+  // ──────────────────────────────────────────────────────────────
+  // ':scope > div > div' selects the first CELL inside the first ROW.
+  // ':scope' means "relative to `block`" — prevents matching deeper elements.
+  // If a cell exists and has text, the block has UE content.
   const firstCell = block.querySelector(':scope > div > div');
-  const hasUEContent = firstCell && firstCell.textContent.trim() !== '';
+  const hasUEContent = firstCell !== null && firstCell.textContent.trim() !== '';
 
-  /* --------------------------------------------------------
-   * Fragment-based fallback (classic authoring)
-   * -------------------------------------------------------- */
+  // ──────────────────────────────────────────────────────────────
+  // PATH A: No UE content → load /footer as a fragment (classic EDS)
+  // ──────────────────────────────────────────────────────────────
   if (!hasUEContent) {
-    const footerMeta = getMetadata('footer');
-    const footerPath = footerMeta ? new URL(footerMeta, window.location).pathname : '/footer';
+    const footerMeta = getMetadata('footer'); // check for custom footer path in metadata
+    const footerPath = footerMeta
+      ? new URL(footerMeta, window.location).pathname
+      : '/footer'; // default path
+
     const fragment = await loadFragment(footerPath);
 
+    // Replace block content with fragment
     block.textContent = '';
-    const footer = document.createElement('div');
-    while (fragment.firstElementChild) footer.append(fragment.firstElementChild);
-    block.append(footer);
+    const wrapper = document.createElement('div');
+    while (fragment.firstElementChild) wrapper.append(fragment.firstElementChild);
+    block.append(wrapper);
     return;
   }
 
-  /* --------------------------------------------------------
-   * Universal Editor authored path (nested multifield)
-   * Row 0: brand (logo | tagline)
-   * Row 1: columns (composite multifield → column rows inside)
-   * Row 2: copyright
-   * -------------------------------------------------------- */
+  // ──────────────────────────────────────────────────────────────
+  // PATH B: UE-authored — parse the block's rows
+  // Our model field order → row index mapping:
+  //   Row 0 → "logo"      (reference image)
+  //   Row 1 → "logoAlt"   (text — used inside the img's alt attribute)
+  //   Row 2 → "tagline"   (richtext)
+  //   Row 3 → "columns"   (composite multifield: title + links per column)
+  //   Row 4 → "copyright" (text)
+  // ──────────────────────────────────────────────────────────────
   const rows = [...block.querySelectorAll(':scope > div')];
 
-  // --- Brand row ---
+  // ── ROW 0: LOGO (reference field → rendered as <picture><img>) ──
   let logoEl = null;
-  let taglineEl = null;
-  const brandRow = rows[0];
-  if (brandRow) {
-    const cells = [...brandRow.querySelectorAll(':scope > div')];
-    const img = cells[0]?.querySelector('img');
+  if (rows[0]) {
+    const img = rows[0].querySelector('img');
     if (img) {
+      // Wrap the logo image in a link to the homepage
       const a = document.createElement('a');
       a.href = '/';
       a.className = 'footer-brand-logo';
       a.setAttribute('aria-label', 'Home');
       img.alt = img.alt || 'Brand Logo';
-      a.append(img.cloneNode(true));
+      a.append(img.cloneNode(true)); // cloneNode(true) copies img + child nodes
       logoEl = a;
     }
-    if (cells[1]?.innerHTML) {
+  }
+
+  // ── ROW 1: logoAlt is stored in the img's alt attribute automatically.
+  //           We skip this row — no separate processing needed.
+
+  // ── ROW 2: TAGLINE (richtext → may contain <p>, <strong>, etc.) ──
+  let taglineEl = null;
+  if (rows[2]) {
+    const cell = rows[2].querySelector(':scope > div');
+    if (cell && cell.innerHTML.trim()) {
       taglineEl = document.createElement('p');
       taglineEl.className = 'footer-tagline';
-      taglineEl.innerHTML = cells[1].innerHTML;
+      taglineEl.innerHTML = cell.innerHTML; // preserve rich HTML formatting
     }
   }
 
-  // --- Columns row (composite multifield: outer container multi:true) ---
-  // Each column item is hr-separated inside cells[1] of the columns row.
-  // We parse the columns row's second cell for the column items.
+  // ── ROW 3: COLUMNS (composite multifield — all items in ONE cell) ──
+  // This is the core of the "nested multifield" feature.
+  // See parseColumns() above for how the <hr>-separated content is handled.
   let columnsNav = null;
-  const columnsRow = rows[1];
-  if (columnsRow) {
-    // The columns composite multifield renders as hr-separated blocks
-    // Each block is: columnTitle \n links (ul>li>a)
-    const columnsCell = columnsRow.querySelector(':scope > div:last-child') || columnsRow;
-    const html = columnsCell.innerHTML;
-    const parts = html.split(/<hr\s*\/?>/i).map((p) => p.trim()).filter(Boolean);
-
-    const parsedColumns = parts.map((part) => {
-      const temp = document.createElement('div');
-      temp.innerHTML = part;
-      // First <p> or plain text = column title
-      const firstP = temp.querySelector('p');
-      const title = firstP ? firstP.textContent.trim() : temp.childNodes[0]?.textContent?.trim() || '';
-      if (firstP) firstP.remove();
-
-      // Remaining <ul><li><a> = links
-      const links = [];
-      temp.querySelectorAll('li').forEach((li) => {
-        const a = li.querySelector('a');
-        if (a) {
-          links.push({ text: a.textContent.trim(), href: a.href });
-        } else {
-          const text = li.textContent.trim();
-          if (text) links.push({ text, href: '#' });
-        }
-      });
-
-      return { title, links };
-    }).filter(({ title, links }) => title || links.length > 0);
-
-    if (parsedColumns.length > 0) {
-      columnsNav = buildColumnsNav(parsedColumns);
-    } else {
-      // Fallback: treat each child row as a column (non-hr-separated layout)
-      const colBlock = document.createElement('div');
-      colBlock.innerHTML = columnsRow.innerHTML;
-      const cols = parseFooterColumns(colBlock);
-      if (cols.length > 0) columnsNav = buildColumnsNav(cols);
+  if (rows[3]) {
+    const columnsCell = rows[3].querySelector(':scope > div');
+    if (columnsCell) {
+      const parsedColumns = parseColumns(columnsCell);
+      if (parsedColumns.length > 0) {
+        columnsNav = buildColumnsNav(parsedColumns);
+      }
     }
   }
 
-  // --- Copyright row ---
-  const copyrightText = rows[2]?.textContent?.trim()
+  // ── ROW 4: COPYRIGHT (text field → plain text in a <div>) ──
+  const copyrightText = rows[4]?.querySelector(':scope > div')?.textContent?.trim()
     || `© ${new Date().getFullYear()} All rights reserved.`;
 
-  /* --------------------------------------------------------
-   * Build final DOM
-   * -------------------------------------------------------- */
+  // ──────────────────────────────────────────────────────────────
+  // BUILD THE FINAL FOOTER LAYOUT
+  // ──────────────────────────────────────────────────────────────
+  // Clear the original raw rows from the block
   block.textContent = '';
 
   const wrapper = document.createElement('div');
   wrapper.className = 'footer-wrapper';
 
-  // Brand section
+  // Brand section (logo + tagline)
   if (logoEl || taglineEl) {
     const brand = document.createElement('div');
     brand.className = 'footer-brand';
@@ -215,10 +298,10 @@ export default async function decorate(block) {
     wrapper.append(brand);
   }
 
-  // Columns nav
+  // Columns navigation
   if (columnsNav) wrapper.append(columnsNav);
 
-  // Bottom bar
+  // Bottom bar with copyright
   const bottom = document.createElement('div');
   bottom.className = 'footer-bottom';
   const copy = document.createElement('p');
