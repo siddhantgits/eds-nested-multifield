@@ -125,51 +125,75 @@ function parseColumnsJson(json) {
 }
 
 /**
- * STEP 2: Fetches column data from AEM's JSON API.
+ * Reads the AEM author host URL from the Universal Editor connection meta tag.
  *
- * Uses the JCR path from the columns row's data-aue-resource attribute,
- * then appends .json to call AEM's Sling GET servlet.
+ * When authoring in AEM Cloud, the page head contains:
+ *   <meta name="urn:adobe:aue:system:aemconnection"
+ *         content="aem:https://author-pXXX-eYYY.adobeaemcloud.com">
  *
- * The AEM host URL is extracted from window.hlx config (set by scripts.js)
- * or falls back to the fstab-configured AEM Cloud URL.
+ * This gives us the AEM host so we can make absolute API calls.
+ * Falls back to same-origin (window.location.origin) if not found,
+ * which works when the page IS served from the AEM author domain.
  *
- * @param {Element} columnsRow - The columns div (with data-aue-resource)
+ * @returns {string} AEM base URL e.g. "https://author-p130360-e1272151.adobeaemcloud.com"
+ */
+function getAemHost() {
+  // Look for the UE connection meta tag in the page head
+  // It maps the "aemconnection" name to the actual AEM host URL.
+  // Format of content attribute: "aem:https://author-pXXX-eYYY.adobeaemcloud.com"
+  //                           or just: "https://author-pXXX-eYYY.adobeaemcloud.com"
+  const connectionMeta = document.querySelector(
+    'meta[name="urn:adobe:aue:system:aemconnection"]',
+  );
+
+  if (connectionMeta) {
+    const content = connectionMeta.getAttribute('content') || '';
+    // Strip the "aem:" protocol prefix if present
+    const url = content.startsWith('aem:') ? content.slice(4) : content;
+    if (url) return url.replace(/\/$/, ''); // remove trailing slash
+  }
+
+  // Fallback: if page is served from AEM author directly,
+  // same-origin will work. Also catches local aem up proxy.
+  return window.location.origin;
+}
+
+/**
+ * Fetches column data from AEM's Sling JSON API.
+ *
+ * AEM's .json suffix on any JCR path returns the node as JSON:
+ *   GET https://{aem-host}/content/.../footer/columns.json
+ *   → { "item1": { "title": "Products", "links": ["/p1","/p2"] }, ... }
+ *
+ * Uses credentials:include so that AEM session cookies are sent.
+ * This works when the user is authenticated in their browser (UE session).
+ *
+ * @param {Element} columnsRow - The columns div (has data-aue-resource)
  * @returns {Promise<Array>} Parsed column objects
  */
 async function fetchColumnsData(columnsRow) {
-  // The data-aue-resource attribute format:
-  //   "urn:aemconnection:/content/path/to/footer/columns"
-  // We need just the JCR path after "urn:aemconnection:"
+  // Extract JCR path from "urn:aemconnection:/content/path/to/columns"
   const resource = columnsRow.getAttribute('data-aue-resource') || '';
   const jcrPath = resource.replace('urn:aemconnection:', '');
 
   if (!jcrPath) return [];
 
-  // Build the AEM JSON API URL.
-  // AEM's Sling GET servlet with .json selector returns the node as JSON.
-  // We use the same AEM host that serves this page's content.
-  //
-  // In local dev (aem up), this is proxied through localhost:3000.
-  // In production, this would be the published CDN — but composite
-  // multifield data is not published to the CDN yet (early-access).
-  // So this fetch currently ONLY works in local dev / UE environments.
-  const aemUrl = `${jcrPath}.json`;
+  // Build the absolute URL using the AEM author host.
+  // We MUST use an absolute URL because:
+  //   - In UE cloud, the page might be served from aem.page (EDS CDN)
+  //     and a relative URL would go to the CDN, not AEM.
+  //   - Only the AEM author has the JCR JSON API.
+  const aemHost = getAemHost();
+  const aemUrl = `${aemHost}${jcrPath}.json`;
 
   try {
-    // fetch() makes an HTTP GET request to the URL.
-    // "credentials: include" sends cookies for AEM authentication.
+    // credentials:'include' sends the user's AEM session cookies.
+    // This works in UE because the user is authenticated on the AEM author.
     const response = await fetch(aemUrl, { credentials: 'include' });
-
-    if (!response.ok) {
-      // Response status 401/403 = not authenticated, 404 = path doesn't exist
-      return [];
-    }
-
-    // response.json() parses the JSON text into a JavaScript object
+    if (!response.ok) return [];
     const json = await response.json();
     return parseColumnsJson(json);
   } catch {
-    // Network error or JSON parse error — silently return empty array
     return [];
   }
 }
@@ -286,16 +310,21 @@ export default async function decorate(block) {
 
   // ── ROW 0: LOGO ──────────────────────────────────────────────
   // An AEM reference field renders as <picture><img src="..." alt="logoAlt">.
-  // The "logoAlt" text field value is automatically placed in img.alt by AEM — NO separate row.
+  // We clone the FULL <picture> element (not just <img>) so that
+  // any <source> tags for responsive/webp images are preserved.
+  // The "logoAlt" model field value is already in img.alt — NO separate row.
   let logoEl = null;
   if (rows[0]) {
+    // Clone the picture element if it exists, otherwise fall back to img
+    const picture = rows[0].querySelector('picture');
     const img = rows[0].querySelector('img');
-    if (img) {
+    const mediaEl = picture ? picture.cloneNode(true) : img && img.cloneNode(true);
+    if (mediaEl) {
       const a = document.createElement('a');
       a.href = '/';
       a.className = 'footer-brand-logo';
       a.setAttribute('aria-label', 'Home');
-      a.append(img.cloneNode(true)); // cloneNode(true) = deep copy (copies all children too)
+      a.append(mediaEl);
       logoEl = a;
     }
   }
