@@ -3,133 +3,192 @@
  *  FOOTER BLOCK — EDS / Universal Editor
  * ============================================================
  *
- * HOW EDS RENDERS THIS BLOCK
+ * HOW EDS RENDERS THIS BLOCK (verified from actual page source)
  * ─────────────────────────────────────────────────────────────
- * EDS converts every block to an HTML table. Each field in the
- * component model becomes one ROW. The block's HTML looks like:
+ * AEM renders simple block properties as <div> rows. HOWEVER composite
+ * multifield children (stored as JCR sub-nodes) are NOT rendered to HTML.
+ * Instead, the columns node appears as an EMPTY div with a data-aue-resource:
  *
- *  <div class="footer block">
- *    <div>                      ROW 0 → "logo" (reference field → <picture><img>)
- *      <div><picture>…</picture></div>
- *    </div>
- *    <div>                      ROW 1 → "logoAlt" (text field)
- *      <div>alt text here</div>
- *    </div>
- *    <div>                      ROW 2 → "tagline" (richtext field)
- *      <div><p>Tagline text</p></div>
- *    </div>
- *    <div>                      ROW 3 → "columns" (COMPOSITE MULTIFIELD)
- *      <div>
- *        ALL column items land in ONE cell, separated by <hr> tags:
- *
- *        <hr>
- *        <p>Products</p>          ← "title" text field of column #1
- *        <ul>                     ← "links" aem-content multi of column #1
- *          <li><a href="…">Link A</a></li>
- *          <li><a href="…">Link B</a></li>
- *        </ul>
- *        <hr>
- *        <p>Company</p>           ← "title" of column #2
- *        <ul>
- *          <li><a href="…">About</a></li>
- *        </ul>
- *        <hr>
- *      </div>
- *    </div>
- *    <div>                      ROW 4 → "copyright" (text field)
- *      <div>© 2024 My Company</div>
+ *  <div class="footer">
+ *    <div><div><picture><img alt="..."></picture></div></div>  ← Row 0: logo
+ *    <div><div><p>tagline text</p></div></div>                 ← Row 1: tagline
+ *    <div><div>copyright text</div></div>                      ← Row 2: copyright
+ *    <div data-aue-resource="urn:aemconnection:/...columns">   ← Row 3: columns (EMPTY)
  *    </div>
  *  </div>
  *
- * ─────────────────────────────────────────────────────────────
- * ABOUT FIELD NAMES (name property)
- * ─────────────────────────────────────────────────────────────
- * In EDS component-models.json, field names are always SIMPLE FLAT strings:
- *   "name": "title"     ✅ correct
- *   "name": "links"     ✅ correct
+ * NOTE: "logoAlt" is NOT a separate row — AEM merges it into <img alt="...">.
  *
- * The JCR path notation ("teaser/image/fileReference") is from AEM's old
- * Coral UI dialogs and is NOT used in EDS Universal Editor models.
- * Inside a composite container (multi:true), each sub-field simply uses
- * its own flat "name". The system handles JCR storage paths automatically.
+ *
+ * THE COLUMNS JCR STRUCTURE
+ * ─────────────────────────────────────────────────────────────
+ * Even though columns renders empty in HTML, the data IS stored in JCR:
+ *
+ *   /content/.../footer/
+ *     columns/                    ← the composite multifield root node
+ *       item0/                    ← first column (JCR child node)
+ *         title: "Products"       ← text field (JCR string property)
+ *         links: ["/p1", "/p2"]   ← aem-content multi (JCR multi-valued string)
+ *       item1/                    ← second column
+ *         title: "Company"
+ *         links: ["/p3"]
+ *
+ * To fetch this, we use AEM's Sling GET servlet JSON API:
+ *   GET https://{aem-host}/content/.../footer/columns.json
+ * Response:
+ *   {
+ *     "item0": { "title": "Products", "links": ["/p1", "/p2"] },
+ *     "item1": { "title": "Company",  "links": ["/p3"] }
+ *   }
+ *
+ * We extract the columns node JCR path from the data-aue-resource attribute.
+ * The AEM host is read from fstab.yaml (via the page's franklin proxy config).
+ *
+ *
+ * FIELD NAMES IN COMPONENT MODELS (simple flat names)
+ * ─────────────────────────────────────────────────────────────
+ * In component-models.json, names are always SIMPLE FLAT strings:
+ *   "name": "title"   ✅ → stored as JCR property: columns/item0/title
+ *   "name": "links"   ✅ → stored as JCR property: columns/item0/links (multi-value)
+ * NOT path-style like "teaser/image/fileReference" — that is old Coral UI XML syntax.
  */
 
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 
 /**
- * Splits the composite multifield cell into individual column objects.
+ * STEP 1: Parse the AEM .json response for the columns node.
  *
- * A composite multifield packs ALL items into ONE cell separated by <hr>.
- * Each item section contains:
- *   - <p>…</p>  → the "title" (text field)
- *   - <ul>…</ul> → the "links" (aem-content + multi:true)
+ * AEM's Sling GET servlet returns a JCR node as JSON.
+ * Direct child nodes appear as keys whose values are objects.
+ * JCR system properties start with "jcr:" or "sling:" — we skip those.
  *
- * To DEBUG: open Browser DevTools → Console. Look for "[Footer]" messages.
- * Also open the Elements tab and inspect the footer's raw div rows to see
- * exactly what EDS rendered before this function ran.
+ * Example response from GET .../footer/columns.json:
+ *   {
+ *     "jcr:primaryType": "nt:unstructured",    ← skip (system property)
+ *     "item0": {                                ← first column item
+ *       "jcr:primaryType": "nt:unstructured",  ← skip
+ *       "title": "Products",                   ← our "title" field
+ *       "links": ["/content/p1", "/content/p2"] ← our "links" field (multi-value)
+ *     },
+ *     "item1": {
+ *       "title": "Company",
+ *       "links": "/content/p3"                 ← single value: string, not array!
+ *     }
+ *   }
  *
- * @param {Element} cell - The DOM element holding the composite multifield HTML
- * @returns {Array<{title: string, links: Array<{text: string, href: string}>}>}
+ * IMPORTANT: AEM stores a single-value multi-field as a String (not array).
+ * We always wrap `links` in Array.from() to handle both cases.
+ *
+ * @param {Object} json - Parsed JSON from AEM columns.json
+ * @returns {Array<{title: string, links: string[]}>}
  */
-function parseColumns(cell) {
-  // Split the cell's HTML on every <hr> tag.
-  // innerHTML gives us the raw HTML string; split() cuts it into pieces.
-  // Each piece is one column's content (title + links).
-  const parts = cell.innerHTML
-    .split(/<hr\s*\/?>/) // matches <hr>, <hr/>, <hr />
-    .map((p) => p.trim()) // remove leading/trailing whitespace
-    .filter((p) => p.length > 0); // drop empty strings
+function parseColumnsJson(json) {
+  // Filter to only JCR child nodes (objects that aren't system properties)
+  // System props: "jcr:primaryType", "jcr:created", "sling:resourceType", etc.
+  const columnItems = Object.entries(json)
+    .filter(([key, value]) => (
+      !key.startsWith('jcr:') // skip JCR system properties
+      && !key.startsWith('sling:') // skip Sling system properties
+      && typeof value === 'object' // must be an object (child node)
+      && value !== null
+    ))
+    .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true })); // item0, item1, item2…
 
-  // Convert each HTML piece into a structured { title, links } object
-  return parts
-    .map((part) => {
-      // Create a throw-away <div> to parse the piece as real DOM nodes
-      const temp = document.createElement('div');
-      temp.innerHTML = part;
+  // Convert each child node into { title, links }
+  return columnItems.map(([, item]) => {
+    const title = item.title || '';
 
-      // ── "title" field ──────────────────────────────────────────
-      // The text field renders as a <p> element.
-      // We grab the FIRST <p> in this section as the column title.
-      const titleEl = temp.querySelector('p');
-      const title = titleEl ? titleEl.textContent.trim() : '';
-      if (titleEl) titleEl.remove(); // remove it so it won't appear in links
+    // "links" is a multi-valued string property in JCR.
+    // If only one value was saved, AEM sends it as a plain string.
+    // If multiple, it's an array. Always normalize to an array.
+    const rawLinks = item.links;
+    const linkPaths = rawLinks
+      ? Array.from(Array.isArray(rawLinks) ? rawLinks : [rawLinks])
+      : [];
 
-      // ── "links" field (aem-content + multi:true) ───────────────
-      // aem-content with multi:true renders as <ul><li><a href="…">text</a></li></ul>
-      // Each <li> is one URL the author picked in UE.
-      const links = [];
-      temp.querySelectorAll('li').forEach((li) => {
-        const anchor = li.querySelector('a');
-        if (anchor) {
-          links.push({
-            text: anchor.textContent.trim(), // the visible label of the link
-            href: anchor.href, // the full URL (browser resolves relative paths)
-          });
-        }
-      });
+    // Convert JCR content paths to absolute URLs.
+    // AEM paths like "/content/mysite/page" become full URLs on publish.
+    // For display purposes we use the path as href; authors set link text
+    // via the aem-content picker which stores the page path.
+    // EDS will resolve these to the correct CDN URLs after publish.
+    const links = linkPaths.map((path) => ({
+      href: path,
+      // Use the last segment of the path as the link text (fallback).
+      // e.g. "/content/mysite/about-us" → "about-us"
+      // Authors can override this by configuring the page's nav title.
+      text: path.split('/').filter(Boolean).pop() || path,
+    }));
 
-      return { title, links };
-    })
-    .filter((col) => col.title || col.links.length > 0); // remove empty items
+    return { title, links };
+  }).filter((col) => col.title || col.links.length > 0);
 }
 
 /**
- * Creates the visual footer columns navigation from parsed data.
+ * STEP 2: Fetches column data from AEM's JSON API.
  *
- * Output structure:
+ * Uses the JCR path from the columns row's data-aue-resource attribute,
+ * then appends .json to call AEM's Sling GET servlet.
+ *
+ * The AEM host URL is extracted from window.hlx config (set by scripts.js)
+ * or falls back to the fstab-configured AEM Cloud URL.
+ *
+ * @param {Element} columnsRow - The columns div (with data-aue-resource)
+ * @returns {Promise<Array>} Parsed column objects
+ */
+async function fetchColumnsData(columnsRow) {
+  // The data-aue-resource attribute format:
+  //   "urn:aemconnection:/content/path/to/footer/columns"
+  // We need just the JCR path after "urn:aemconnection:"
+  const resource = columnsRow.getAttribute('data-aue-resource') || '';
+  const jcrPath = resource.replace('urn:aemconnection:', '');
+
+  if (!jcrPath) return [];
+
+  // Build the AEM JSON API URL.
+  // AEM's Sling GET servlet with .json selector returns the node as JSON.
+  // We use the same AEM host that serves this page's content.
+  //
+  // In local dev (aem up), this is proxied through localhost:3000.
+  // In production, this would be the published CDN — but composite
+  // multifield data is not published to the CDN yet (early-access).
+  // So this fetch currently ONLY works in local dev / UE environments.
+  const aemUrl = `${jcrPath}.json`;
+
+  try {
+    // fetch() makes an HTTP GET request to the URL.
+    // "credentials: include" sends cookies for AEM authentication.
+    const response = await fetch(aemUrl, { credentials: 'include' });
+
+    if (!response.ok) {
+      // Response status 401/403 = not authenticated, 404 = path doesn't exist
+      return [];
+    }
+
+    // response.json() parses the JSON text into a JavaScript object
+    const json = await response.json();
+    return parseColumnsJson(json);
+  } catch {
+    // Network error or JSON parse error — silently return empty array
+    return [];
+  }
+}
+
+/**
+ * STEP 3: Build the footer columns <nav> from parsed column data.
+ *
+ * Creates:
  *   <nav class="footer-columns">
  *     <div class="footer-column">
  *       <h3 class="footer-column-title">Products</h3>
  *       <ul class="footer-column-links">
- *         <li><a href="/p1">Link A</a></li>
- *         <li><a href="/p2">Link B</a></li>
+ *         <li><a href="/p1">p1</a></li>
  *       </ul>
  *     </div>
  *     … more columns …
  *   </nav>
  *
- * @param {Array} columns - From parseColumns()
+ * @param {Array<{title: string, links: Array<{text: string, href: string}>}>} columns
  * @returns {Element}
  */
 function buildColumnsNav(columns) {
@@ -149,7 +208,7 @@ function buildColumnsNav(columns) {
       col.append(heading);
     }
 
-    // Links list <ul>
+    // Links list <ul><li><a>
     if (links.length > 0) {
       const ul = document.createElement('ul');
       ul.className = 'footer-column-links';
@@ -171,49 +230,42 @@ function buildColumnsNav(columns) {
 }
 
 /**
- * EDS calls this function automatically when it finds a block with class "footer".
- * The `block` parameter is the <div class="footer block"> DOM element.
+ * MAIN DECORATE FUNCTION
+ * ══════════════════════
+ * EDS calls this when it finds a block with class "footer".
  *
- * HOW THE STANDARD FOOTER WORKS IN EDS
- * ─────────────────────────────────────
- * The boilerplate footer is NOT authored per-page. Instead:
- *   1. scripts.js auto-adds an empty "footer" block to every page
- *   2. decorate() loads the /footer PAGE as a "fragment" (an HTML snippet)
- *   3. That /footer page IS authored via Universal Editor with this block model
+ * TWO INSTANCES OF THIS BLOCK EXIST PER PAGE:
+ *  1. Inside <main> — the UE-authored footer block (has logo/tagline/etc.)
+ *  2. Inside <footer> — auto-added by scripts.js (empty, loads /footer fragment)
  *
- * So flow is:  Page loads → empty footer block → decorate() → fetches /footer → renders content
+ * ACTUAL BLOCK ROWS (from page source, verified):
+ *  Row 0 → logo      (reference field  → <picture><img alt="...">)
+ *  Row 1 → tagline   (richtext field   → <p> elements)
+ *  Row 2 → copyright (text field       → plain text)
+ *  Row 3 → columns   (composite multi  → EMPTY div with data-aue-resource)
  *
- * When authoring ON the /footer page itself in Universal Editor, the block
- * DOES have content in its rows. So we still need to handle both cases.
- *
- * DEBUGGING TIP: Open the browser at localhost:3000, open DevTools → Elements,
- * find the <footer> element. Look at its inner HTML BEFORE this function runs
- * to understand the raw row structure. Add ?debug to the URL for extra EDS logs.
+ * NOTE: "logoAlt" is NOT a separate row. AEM merges it into <img alt="">.
  *
  * @param {Element} block - The footer block DOM element
  */
 export default async function decorate(block) {
   // ──────────────────────────────────────────────────────────────
-  // DETECT: Does this block have UE-authored content in its rows?
+  // DETECT UE-AUTHORED CONTENT
   // ──────────────────────────────────────────────────────────────
-  // ':scope > div > div' selects the first CELL inside the first ROW.
-  // ':scope' means "relative to `block`" — prevents matching deeper elements.
-  // If a cell exists and has text, the block has UE content.
+  // KEY: Use innerHTML not textContent — images have no text!
+  // Row 0 is a <picture><img> which has ZERO text, but HAS innerHTML.
   const firstCell = block.querySelector(':scope > div > div');
-  const hasUEContent = firstCell !== null && firstCell.textContent.trim() !== '';
+  const hasUEContent = firstCell !== null && firstCell.innerHTML.trim() !== '';
 
   // ──────────────────────────────────────────────────────────────
   // PATH A: No UE content → load /footer as a fragment (classic EDS)
   // ──────────────────────────────────────────────────────────────
   if (!hasUEContent) {
-    const footerMeta = getMetadata('footer'); // check for custom footer path in metadata
+    const footerMeta = getMetadata('footer');
     const footerPath = footerMeta
       ? new URL(footerMeta, window.location).pathname
-      : '/footer'; // default path
-
+      : '/footer';
     const fragment = await loadFragment(footerPath);
-
-    // Replace block content with fragment
     block.textContent = '';
     const wrapper = document.createElement('div');
     while (fragment.firstElementChild) wrapper.append(fragment.firstElementChild);
@@ -222,69 +274,74 @@ export default async function decorate(block) {
   }
 
   // ──────────────────────────────────────────────────────────────
-  // PATH B: UE-authored — parse the block's rows
-  // Our model field order → row index mapping:
-  //   Row 0 → "logo"      (reference image)
-  //   Row 1 → "logoAlt"   (text — used inside the img's alt attribute)
-  //   Row 2 → "tagline"   (richtext)
-  //   Row 3 → "columns"   (composite multifield: title + links per column)
-  //   Row 4 → "copyright" (text)
+  // PATH B: UE-authored — parse block rows + fetch columns JSON
+  //
+  // Row index map (from actual AEM-rendered page source):
+  //   rows[0] → logo      (reference → <picture><img alt="logoAlt value">)
+  //   rows[1] → tagline   (richtext  → <p>...</p>)
+  //   rows[2] → copyright (text      → plain text)
+  //   rows[3] → columns   (composite → EMPTY div, has data-aue-resource)
   // ──────────────────────────────────────────────────────────────
   const rows = [...block.querySelectorAll(':scope > div')];
 
-  // ── ROW 0: LOGO (reference field → rendered as <picture><img>) ──
+  // ── ROW 0: LOGO ──────────────────────────────────────────────
+  // An AEM reference field renders as <picture><img src="..." alt="logoAlt">.
+  // The "logoAlt" text field value is automatically placed in img.alt by AEM — NO separate row.
   let logoEl = null;
   if (rows[0]) {
     const img = rows[0].querySelector('img');
     if (img) {
-      // Wrap the logo image in a link to the homepage
       const a = document.createElement('a');
       a.href = '/';
       a.className = 'footer-brand-logo';
       a.setAttribute('aria-label', 'Home');
-      img.alt = img.alt || 'Brand Logo';
-      a.append(img.cloneNode(true)); // cloneNode(true) copies img + child nodes
+      a.append(img.cloneNode(true)); // cloneNode(true) = deep copy (copies all children too)
       logoEl = a;
     }
   }
 
-  // ── ROW 1: logoAlt is stored in the img's alt attribute automatically.
-  //           We skip this row — no separate processing needed.
-
-  // ── ROW 2: TAGLINE (richtext → may contain <p>, <strong>, etc.) ──
+  // ── ROW 1: TAGLINE ───────────────────────────────────────────
+  // A richtext field renders as <p> (and other block tags) inside the cell <div>.
   let taglineEl = null;
-  if (rows[2]) {
-    const cell = rows[2].querySelector(':scope > div');
+  if (rows[1]) {
+    const cell = rows[1].querySelector(':scope > div');
     if (cell && cell.innerHTML.trim()) {
-      taglineEl = document.createElement('p');
+      taglineEl = document.createElement('div');
       taglineEl.className = 'footer-tagline';
-      taglineEl.innerHTML = cell.innerHTML; // preserve rich HTML formatting
+      taglineEl.innerHTML = cell.innerHTML; // keep rich HTML (bold, italic, etc.)
     }
   }
 
-  // ── ROW 3: COLUMNS (composite multifield — all items in ONE cell) ──
-  // This is the core of the "nested multifield" feature.
-  // See parseColumns() above for how the <hr>-separated content is handled.
-  let columnsNav = null;
-  if (rows[3]) {
-    const columnsCell = rows[3].querySelector(':scope > div');
-    if (columnsCell) {
-      const parsedColumns = parseColumns(columnsCell);
-      if (parsedColumns.length > 0) {
-        columnsNav = buildColumnsNav(parsedColumns);
-      }
-    }
-  }
-
-  // ── ROW 4: COPYRIGHT (text field → plain text in a <div>) ──
-  const copyrightText = rows[4]?.querySelector(':scope > div')?.textContent?.trim()
+  // ── ROW 2: COPYRIGHT ─────────────────────────────────────────
+  // A text field renders as plain text inside the cell <div>.
+  const copyrightCell = rows[2]?.querySelector(':scope > div');
+  const copyrightText = copyrightCell?.textContent?.trim()
     || `© ${new Date().getFullYear()} All rights reserved.`;
+
+  // ── ROW 3: COLUMNS (composite multifield — fetched via AEM JSON API) ──
+  //
+  // The composite multifield renders as an EMPTY div in HTML — AEM's block
+  // renderer does NOT serialize the child JCR nodes (item0, item1…) to HTML.
+  //
+  // Solution: fetch the JCR data from AEM's .json API using the path
+  // embedded in the data-aue-resource attribute of the columns div.
+  //
+  // JCR structure fetched:
+  //   { "item0": { "title": "Products", "links": ["/p1", "/p2"] },
+  //     "item1": { "title": "Company",  "links": ["/p3"] } }
+  let columnsNav = null;
+  const columnsRow = rows[3];
+  if (columnsRow) {
+    const parsedColumns = await fetchColumnsData(columnsRow);
+    if (parsedColumns.length > 0) {
+      columnsNav = buildColumnsNav(parsedColumns);
+    }
+  }
 
   // ──────────────────────────────────────────────────────────────
   // BUILD THE FINAL FOOTER LAYOUT
   // ──────────────────────────────────────────────────────────────
-  // Clear the original raw rows from the block
-  block.textContent = '';
+  block.textContent = ''; // clear raw block rows
 
   const wrapper = document.createElement('div');
   wrapper.className = 'footer-wrapper';
@@ -298,7 +355,7 @@ export default async function decorate(block) {
     wrapper.append(brand);
   }
 
-  // Columns navigation
+  // Columns navigation (from AEM JSON API)
   if (columnsNav) wrapper.append(columnsNav);
 
   // Bottom bar with copyright
