@@ -54,12 +54,6 @@
                             "valueType": "string",
                             "name": "title",
                             "label": "Column Title"
-                        },
-                        {
-                            "component": "aem-content",
-                            "name": "links",
-                            "label": "Column Links",
-                            "multi": true
                         }
                     ]
                 },
