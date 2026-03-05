@@ -1,20 +1,162 @@
+/* ============================================================
+   Footer Block — Nested Multifield Layout
+   ============================================================ */
+
 footer {
-  background-color: var(--light-color);
-  font-size: var(--body-font-size-xs);
+  background-color: #1d1d1f;
+  color: #f5f5f7;
+  font-size: var(--body-font-size-s, 0.875rem);
+  font-family: var(--body-font-family, sans-serif);
 }
 
-footer .footer > div {
-  margin: auto;
+/* ---- Wrapper ---- */
+.footer .footer-wrapper {
   max-width: 1200px;
-  padding: 40px 24px 24px;
+  margin: 0 auto;
+  padding: 56px 24px 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 48px;
 }
 
-footer .footer p {
+/* ---- Brand ---- */
+.footer .footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer .footer-brand-logo img {
+  height: 36px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  transition: opacity 0.2s ease;
+}
+
+.footer .footer-brand-logo:hover img {
+  opacity: 0.8;
+}
+
+.footer .footer-tagline {
+  color: #a1a1a6;
   margin: 0;
+  max-width: 340px;
+  line-height: 1.6;
+}
+
+/* ---- Columns grid ---- */
+.footer .footer-columns {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 40px;
+}
+
+.footer .footer-column-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6e6e73;
+  margin: 0 0 16px;
+}
+
+.footer .footer-column-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer .footer-column-links li a {
+  color: #d1d1d6;
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  transition: color 0.2s ease;
+}
+
+/* Animated underline on hover */
+.footer .footer-column-links li a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 1px;
+  background-color: #f5f5f7;
+  transition: width 0.2s ease;
+}
+
+.footer .footer-column-links li a:hover {
+  color: #f5f5f7;
+}
+
+.footer .footer-column-links li a:hover::after {
+  width: 100%;
+}
+
+.footer .footer-column-links li a:focus-visible {
+  outline: 2px solid #0071e3;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---- Bottom bar ---- */
+.footer .footer-bottom {
+  border-top: 1px solid #2d2d2f;
+  padding: 20px 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer .footer-copyright {
+  margin: 0;
+  color: #6e6e73;
+  font-size: 0.75rem;
+}
+
+/* ============================================================
+   Responsive breakpoints
+   ============================================================ */
+
+@media (width >= 600px) {
+  .footer .footer-columns {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (width >= 900px) {
-  footer .footer > div {
-    padding: 40px 32px 24px;
+  .footer .footer-wrapper {
+    padding: 64px 32px 0;
+    grid-template-rows: unset;
+    grid-template-columns: 240px 1fr;
+    grid-template-areas:
+      "brand  columns"
+      "bottom bottom";
+    gap: 48px 64px;
+  }
+
+  .footer .footer-brand {
+    grid-area: brand;
+  }
+
+  .footer .footer-columns {
+    grid-area: columns;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .footer .footer-bottom {
+    grid-area: bottom;
+  }
+}
+
+@media (width >= 1200px) {
+  .footer .footer-columns {
+    grid-template-columns: repeat(4, 1fr);
   }
 }

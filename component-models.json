@@ -180,6 +180,72 @@
     ]
   },
   {
+    "id": "footer",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "logo",
+        "label": "Brand Logo",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "logoAlt",
+        "label": "Logo Alt Text",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "tagline",
+        "label": "Brand Tagline",
+        "value": "",
+        "valueType": "string"
+      },
+      {
+        "component": "container",
+        "name": "columns",
+        "label": "Footer Columns",
+        "multi": true,
+        "fields": [
+          {
+            "component": "text",
+            "valueType": "string",
+            "name": "columnTitle",
+            "label": "Column Title"
+          },
+          {
+            "component": "container",
+            "name": "links",
+            "label": "Column Links",
+            "multi": true,
+            "fields": [
+              {
+                "component": "text",
+                "valueType": "string",
+                "name": "linkText",
+                "label": "Link Text"
+              },
+              {
+                "component": "aem-content",
+                "name": "linkUrl",
+                "label": "Link URL"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "copyright",
+        "label": "Copyright Text",
+        "value": ""
+      }
+    ]
+  },
+  {
     "id": "fragment",
     "fields": [
       {
