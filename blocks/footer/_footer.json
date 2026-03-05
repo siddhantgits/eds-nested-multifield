@@ -51,27 +51,14 @@
                         {
                             "component": "text",
                             "valueType": "string",
-                            "name": "columnTitle",
+                            "name": "title",
                             "label": "Column Title"
                         },
                         {
-                            "component": "container",
+                            "component": "aem-content",
                             "name": "links",
                             "label": "Column Links",
-                            "multi": true,
-                            "fields": [
-                                {
-                                    "component": "text",
-                                    "valueType": "string",
-                                    "name": "linkText",
-                                    "label": "Link Text"
-                                },
-                                {
-                                    "component": "aem-content",
-                                    "name": "linkUrl",
-                                    "label": "Link URL"
-                                }
-                            ]
+                            "multi": true
                         }
                     ]
                 },
