@@ -228,6 +228,45 @@
     ]
   },
   {
+    "id": "footer-nav",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "brandName",
+        "label": "Brand / Site Name",
+        "description": "Appears at the top of the footer"
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "legalText",
+        "label": "Legal / Copyright Text",
+        "description": "e.g. © 2025 Acme Corp. All rights reserved."
+      }
+    ]
+  },
+  {
+    "id": "footer-group",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "groupTitle",
+        "label": "Group Heading",
+        "description": "e.g. Products, Company, Support",
+        "required": true
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "links",
+        "label": "Links (and Sublinks)",
+        "description": "Type each link using the link tool. Use a nested list (indent) for sublinks under a parent link."
+      }
+    ]
+  },
+  {
     "id": "footer",
     "fields": [
       {

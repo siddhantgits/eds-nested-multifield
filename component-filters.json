@@ -17,7 +17,8 @@
       "columns",
       "fragment",
       "footer",
-      "customcards"
+      "customcards",
+      "footer-nav"
     ]
   },
   {
@@ -45,6 +46,12 @@
     "id": "customcards",
     "components": [
       "card2"
+    ]
+  },
+  {
+    "id": "footer-nav",
+    "components": [
+      "footer-group"
     ]
   },
   {

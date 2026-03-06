@@ -1,0 +1,103 @@
+/* ─── Footer Nav Block ────────────────────────────────────────── */
+
+.footer-nav {
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+    padding: 3rem 2rem 1.5rem;
+    font-size: 0.9rem;
+}
+
+/* Brand name */
+.footer-nav .footer-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 2rem;
+    letter-spacing: 0.05em;
+}
+
+/* Columns layout */
+.footer-nav .footer-columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #333355;
+}
+
+/* Individual column */
+.footer-nav .footer-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Column heading */
+.footer-nav .footer-column-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #ffffff;
+    margin: 0 0 0.5rem 0;
+}
+
+/* Link list */
+.footer-nav .footer-link-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.footer-nav .footer-link-list li {
+    line-height: 1.4;
+}
+
+.footer-nav .footer-link-list a {
+    color: #a0a0c0;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-nav .footer-link-list a:hover {
+    color: #ffffff;
+}
+
+/* Sublink list (nested under a parent link) */
+.footer-nav .footer-sublink-list {
+    list-style: none;
+    margin: 0.4rem 0 0 0.75rem;
+    padding: 0;
+    border-left: 2px solid #333355;
+    padding-left: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.footer-nav .footer-sublink-list a {
+    font-size: 0.82rem;
+    color: #7070a0;
+}
+
+.footer-nav .footer-sublink-list a:hover {
+    color: #c0c0e0;
+}
+
+/* Legal text */
+.footer-nav .footer-legal {
+    margin-top: 1.5rem;
+    color: #606080;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+/* Mobile: single column */
+@media (max-width: 600px) {
+    .footer-nav .footer-columns {
+        grid-template-columns: 1fr;
+    }
+}
