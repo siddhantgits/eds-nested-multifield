@@ -146,7 +146,7 @@
     "fields": [
       {
         "component": "reference",
-        "valueType": "string",
+        "valueType": "array",
         "name": "image",
         "label": "Image",
         "multi": true
