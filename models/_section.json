@@ -53,7 +53,15 @@
         "fragment",
         "footer",
         "customcards",
-        "footer-nav"
+        "footer-nav",
+        "headerFooter",
+        "footerBrand",
+        "carousel",
+        "bannerSection",
+        "featureCards",
+        "latestBlogsArticleListing",
+        "spaceAdder",
+        "stickyNavigation"
       ]
     }
   ]

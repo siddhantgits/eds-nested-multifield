@@ -1,0 +1,189 @@
+{
+  "definitions": [
+    {
+      "title": "Footer-Brand",
+      "id": "footerBrand",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "filter": "footerBrand",
+              "model": "footerBrand",
+              "name": "Footer-Brand"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Footer Link Group",
+      "id": "footerLinkGroup",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "footerLinkGroup",
+              "name": "Footer Link Group"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Footer Link",
+      "id": "footerLink",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "footerLink",
+              "name": "Footer Link"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Social Link",
+      "id": "socialLink",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "socialLink",
+              "name": "Social Link"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "footerBrand",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Primary Logo",
+          "name": "primaryLogo",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "label": "Secondary Logo",
+          "name": "secondaryLogo",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "fields": [
+            {
+              "component": "reference",
+              "label": "Footer Link Group",
+              "name": "footerLinkGroup",
+              "valueType": "string"
+            }
+          ],
+          "label": "Footer Link Groups",
+          "name": "footerLinkGroups"
+        },
+        {
+          "component": "container",
+          "fields": [
+            {
+              "component": "reference",
+              "label": "Social Link",
+              "name": "socialLink",
+              "valueType": "string"
+            }
+          ],
+          "label": "Social Links",
+          "name": "socialLinks"
+        },
+        {
+          "component": "reference",
+          "label": "ITC Portal Link",
+          "name": "itcPortalLink",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "label": "Copyright",
+          "name": "copyright",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "footerLinkGroup",
+      "fields": [
+        {
+          "component": "container",
+          "fields": [
+            {
+              "component": "reference",
+              "label": "Footer Link",
+              "name": "footerLink",
+              "valueType": "string"
+            }
+          ],
+          "label": "Footer Links",
+          "name": "footerLinks"
+        }
+      ]
+    },
+    {
+      "id": "footerLink",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Link Text",
+          "name": "text",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Link URL",
+          "name": "url",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "socialLink",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Social Link URL",
+          "name": "url",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "label": "Social Icon",
+          "name": "icon",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "footerBrand",
+      "components": [
+        "footerLinkGroup",
+        "socialLink"
+      ]
+    },
+    {
+      "id": "footerLinkGroup",
+      "components": [
+        "footerLink"
+      ]
+    }
+  ]
+}
