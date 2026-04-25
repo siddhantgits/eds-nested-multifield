@@ -1,0 +1,220 @@
+{
+  "definitions": [
+    {
+      "title": "Burger-Navigation",
+      "id": "burger-navigation",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "filter": "burger-navigation",
+              "model": "burger-navigation",
+              "name": "Burger-Navigation"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Burger-Nav-Menu-Item",
+      "id": "burger-nav-menu-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "burger-nav-menu-item",
+              "name": "Burger-Nav-Menu-Item"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Burger-Nav-Multi-Link-Item",
+      "id": "burger-nav-multi-link-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "burger-nav-multi-link-item",
+              "name": "Burger-Nav-Multi-Link-Item"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Burger-Nav-Submenu-Item",
+      "id": "burger-nav-submenu-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "burger-nav-submenu-item",
+              "name": "Burger-Nav-Submenu-Item"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Burger-Nav-Banner",
+      "id": "burger-nav-banner",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "burger-nav-banner",
+              "name": "Burger-Nav-Banner"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "burger-navigation",
+      "fields": [
+        {
+          "component": "container",
+          "item": "burger-nav-menu-item",
+          "label": "Menu Items",
+          "name": "menuItems"
+        },
+        {
+          "component": "container",
+          "item": "burger-nav-banner",
+          "label": "Banner",
+          "name": "banner"
+        }
+      ]
+    },
+    {
+      "id": "burger-nav-menu-item",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Menu Label",
+          "name": "label",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Menu Link",
+          "name": "link",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "burger-nav-multi-link-item",
+          "label": "Multiple Links",
+          "name": "multiLinks"
+        },
+        {
+          "component": "container",
+          "item": "burger-nav-submenu-item",
+          "label": "Submenu",
+          "name": "submenu"
+        },
+        {
+          "component": "richtext",
+          "label": "Navigation Hierarchy",
+          "name": "hierarchy-tree",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "burger-nav-multi-link-item",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Link Label",
+          "name": "label",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Link URL",
+          "name": "link",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "burger-nav-submenu-item",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Submenu Title",
+          "name": "title",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "burger-nav-multi-link-item",
+          "label": "Submenu Links",
+          "name": "submenuLinks"
+        },
+        {
+          "component": "reference",
+          "label": "Banner Image",
+          "name": "bannerImage",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Banner Heading",
+          "name": "bannerHeading",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Banner Description",
+          "name": "bannerDescription",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Banner CTA Link",
+          "name": "bannerCtaLink",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "burger-nav-banner",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Banner Image",
+          "name": "bannerImage",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Banner Heading",
+          "name": "bannerHeading",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "burger-navigation",
+      "components": [
+        "burger-nav-menu-item",
+        "burger-nav-banner",
+        "burger-nav-multi-link-item",
+        "burger-nav-submenu-item"
+      ]
+    }
+  ]
+}
