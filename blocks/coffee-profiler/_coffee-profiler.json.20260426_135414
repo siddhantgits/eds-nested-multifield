@@ -1,0 +1,154 @@
+{
+  "definitions": [
+    {
+      "title": "Coffee-Profiler",
+      "id": "coffee-profiler",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "filter": "coffee-profiler",
+              "model": "coffee-profiler",
+              "name": "Coffee-Profiler"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Coffee-Profiler-Slide",
+      "id": "coffee-profiler-slide",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "coffee-profiler-slide",
+              "name": "Coffee-Profiler-Slide"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Slide-Option",
+      "id": "slide-option",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "slide-option",
+              "name": "Slide-Option"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "coffee-profiler",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Background Image",
+          "name": "backgroundImage",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Heading",
+          "name": "heading",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Greeting Morning",
+          "name": "greetingMorning",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Greeting Afternoon",
+          "name": "greetingAfternoon",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Greeting Evening",
+          "name": "greetingEvening",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Greeting Night",
+          "name": "greetingNight",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Intro Text",
+          "name": "introText",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Error Message",
+          "name": "errorMessage",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "coffee-profiler-slide",
+          "label": "Slides",
+          "name": "slides"
+        }
+      ]
+    },
+    {
+      "id": "coffee-profiler-slide",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Question",
+          "name": "question",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "slide-option",
+          "label": "Options",
+          "name": "options"
+        }
+      ]
+    },
+    {
+      "id": "slide-option",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Option Icon",
+          "name": "icon",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Option Label",
+          "name": "label",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "coffee-profiler",
+      "components": [
+        "coffee-profiler-slide",
+        "slide-option"
+      ]
+    }
+  ]
+}

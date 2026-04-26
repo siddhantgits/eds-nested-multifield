@@ -17,30 +17,30 @@
       }
     },
     {
-      "title": "Coffee-Profiler-Slide",
-      "id": "coffee-profiler-slide",
+      "title": "Profiler-Slide",
+      "id": "profiler-slide",
       "plugins": {
         "xwalk": {
           "page": {
             "resourceType": "core/franklin/components/block/v1/block/item",
             "template": {
-              "model": "coffee-profiler-slide",
-              "name": "Coffee-Profiler-Slide"
+              "model": "profiler-slide",
+              "name": "Profiler-Slide"
             }
           }
         }
       }
     },
     {
-      "title": "Slide-Option",
-      "id": "slide-option",
+      "title": "Profiler-Option",
+      "id": "profiler-option",
       "plugins": {
         "xwalk": {
           "page": {
             "resourceType": "core/franklin/components/block/v1/block/item",
             "template": {
-              "model": "slide-option",
-              "name": "Slide-Option"
+              "model": "profiler-option",
+              "name": "Profiler-Option"
             }
           }
         }
@@ -89,8 +89,8 @@
         },
         {
           "component": "text",
-          "label": "Intro Text",
-          "name": "introText",
+          "label": "Guide Text",
+          "name": "guideText",
           "valueType": "string"
         },
         {
@@ -101,42 +101,90 @@
         },
         {
           "component": "container",
-          "item": "coffee-profiler-slide",
+          "item": "profiler-slide",
           "label": "Slides",
           "name": "slides"
         }
       ]
     },
     {
-      "id": "coffee-profiler-slide",
+      "id": "profiler-slide",
       "fields": [
         {
           "component": "text",
-          "label": "Question",
-          "name": "question",
+          "label": "Question ID",
+          "name": "questionId",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Question Label",
+          "name": "questionLabel",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Question Filter",
+          "name": "questionFilter",
           "valueType": "string"
         },
         {
           "component": "container",
-          "item": "slide-option",
+          "item": "profiler-option",
           "label": "Options",
           "name": "options"
         }
       ]
     },
     {
-      "id": "slide-option",
+      "id": "profiler-option",
       "fields": [
         {
-          "component": "reference",
-          "label": "Option Icon",
-          "name": "icon",
+          "component": "text",
+          "label": "Option ID",
+          "name": "optionId",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Question ID",
+          "name": "questionId",
           "valueType": "string"
         },
         {
           "component": "text",
           "label": "Option Label",
-          "name": "label",
+          "name": "optionLabel",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "label": "Option Icon",
+          "name": "optionIcon",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Option Filter Values",
+          "name": "optionFilterVals",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Option Filter",
+          "name": "optionFilter",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Option Exclude Filter",
+          "name": "optionExcFilter",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Option Aria Label",
+          "name": "optionAriaLabel",
           "valueType": "string"
         }
       ]
@@ -146,8 +194,8 @@
     {
       "id": "coffee-profiler",
       "components": [
-        "coffee-profiler-slide",
-        "slide-option"
+        "profiler-slide",
+        "profiler-option"
       ]
     }
   ]

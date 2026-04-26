@@ -17,15 +17,15 @@
       }
     },
     {
-      "title": "Tooltip-CTA-Item",
-      "id": "tooltip-cta-item",
+      "title": "Tooltip-Signin-Register-Cta",
+      "id": "tooltip-signin-register-cta",
       "plugins": {
         "xwalk": {
           "page": {
             "resourceType": "core/franklin/components/block/v1/block/item",
             "template": {
-              "model": "tooltip-cta-item",
-              "name": "Tooltip-CTA-Item"
+              "model": "tooltip-signin-register-cta",
+              "name": "Tooltip-Signin-Register-Cta"
             }
           }
         }
@@ -50,14 +50,14 @@
         },
         {
           "component": "container",
-          "item": "tooltip-cta-item",
+          "item": "tooltip-signin-register-cta",
           "label": "CTAs",
           "name": "ctas"
         }
       ]
     },
     {
-      "id": "tooltip-cta-item",
+      "id": "tooltip-signin-register-cta",
       "fields": [
         {
           "component": "aem-content",
@@ -78,7 +78,7 @@
     {
       "id": "tooltip-signin-register",
       "components": [
-        "tooltip-cta-item"
+        "tooltip-signin-register-cta"
       ]
     }
   ]

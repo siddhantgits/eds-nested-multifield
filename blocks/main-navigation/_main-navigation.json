@@ -17,120 +17,60 @@
       }
     },
     {
-      "title": "Nav-Section",
-      "id": "nav-section",
+      "title": "Navigation-Item",
+      "id": "navigation-item",
       "plugins": {
         "xwalk": {
           "page": {
             "resourceType": "core/franklin/components/block/v1/block/item",
             "template": {
-              "model": "nav-section",
-              "name": "Nav-Section"
+              "model": "navigation-item",
+              "name": "Navigation-Item"
             }
           }
         }
       }
     },
     {
-      "title": "Nav-Item",
-      "id": "nav-item",
+      "title": "Sub-Navigation-Item",
+      "id": "sub-navigation-item",
       "plugins": {
         "xwalk": {
           "page": {
             "resourceType": "core/franklin/components/block/v1/block/item",
             "template": {
-              "model": "nav-item",
-              "name": "Nav-Item"
+              "model": "sub-navigation-item",
+              "name": "Sub-Navigation-Item"
             }
           }
         }
       }
     },
     {
-      "title": "Nav-Sub-Item",
-      "id": "nav-sub-item",
+      "title": "Subnav-Link-Item",
+      "id": "subnav-link-item",
       "plugins": {
         "xwalk": {
           "page": {
             "resourceType": "core/franklin/components/block/v1/block/item",
             "template": {
-              "model": "nav-sub-item",
-              "name": "Nav-Sub-Item"
+              "model": "subnav-link-item",
+              "name": "Subnav-Link-Item"
             }
           }
         }
       }
     },
     {
-      "title": "Nav-Tertiary-Item",
-      "id": "nav-tertiary-item",
+      "title": "Subnav-Banner",
+      "id": "subnav-banner",
       "plugins": {
         "xwalk": {
           "page": {
             "resourceType": "core/franklin/components/block/v1/block/item",
             "template": {
-              "model": "nav-tertiary-item",
-              "name": "Nav-Tertiary-Item"
-            }
-          }
-        }
-      }
-    },
-    {
-      "title": "Nav-Section-Banner",
-      "id": "nav-section-banner",
-      "plugins": {
-        "xwalk": {
-          "page": {
-            "resourceType": "core/franklin/components/block/v1/block/item",
-            "template": {
-              "model": "nav-section-banner",
-              "name": "Nav-Section-Banner"
-            }
-          }
-        }
-      }
-    },
-    {
-      "title": "Nav-Sub-Banner",
-      "id": "nav-sub-banner",
-      "plugins": {
-        "xwalk": {
-          "page": {
-            "resourceType": "core/franklin/components/block/v1/block/item",
-            "template": {
-              "model": "nav-sub-banner",
-              "name": "Nav-Sub-Banner"
-            }
-          }
-        }
-      }
-    },
-    {
-      "title": "Nav-Search-Button",
-      "id": "nav-search-button",
-      "plugins": {
-        "xwalk": {
-          "page": {
-            "resourceType": "core/franklin/components/block/v1/block/item",
-            "template": {
-              "model": "nav-search-button",
-              "name": "Nav-Search-Button"
-            }
-          }
-        }
-      }
-    },
-    {
-      "title": "Nav-Burger-Button",
-      "id": "nav-burger-button",
-      "plugins": {
-        "xwalk": {
-          "page": {
-            "resourceType": "core/franklin/components/block/v1/block/item",
-            "template": {
-              "model": "nav-burger-button",
-              "name": "Nav-Burger-Button"
+              "model": "subnav-banner",
+              "name": "Subnav-Banner"
             }
           }
         }
@@ -150,55 +90,55 @@
         {
           "component": "aem-content",
           "label": "Logo Link",
-          "name": "logo-link",
+          "name": "logoLink",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "label": "Search Icon (Mobile)",
+          "name": "searchIconMobile",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "label": "Search Icon (Desktop)",
+          "name": "searchIconDesktop",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "label": "Burger Icon",
+          "name": "burgerIcon",
           "valueType": "string"
         },
         {
           "component": "container",
-          "item": "nav-section",
-          "label": "Navigation Sections",
-          "name": "sections"
-        },
-        {
-          "component": "container",
-          "item": "nav-search-button",
-          "label": "Search Buttons",
-          "name": "searchButtons"
-        },
-        {
-          "component": "container",
-          "item": "nav-burger-button",
-          "label": "Burger Buttons",
-          "name": "burgerButtons"
+          "item": "navigation-item",
+          "label": "Navigation Items",
+          "name": "navigationItems"
         }
       ]
     },
     {
-      "id": "nav-section",
+      "id": "navigation-item",
       "fields": [
         {
           "component": "text",
-          "label": "Section Label",
+          "label": "Level 1 Label",
           "name": "label",
           "valueType": "string"
         },
         {
           "component": "aem-content",
-          "label": "Section Aria Label",
-          "name": "aria-label",
+          "label": "Level 1 Link",
+          "name": "link",
           "valueType": "string"
         },
         {
           "component": "container",
-          "item": "nav-item",
-          "label": "Section Items",
-          "name": "items"
-        },
-        {
-          "component": "container",
-          "item": "nav-section-banner",
-          "label": "Section Banner",
-          "name": "sectionBanner"
+          "item": "sub-navigation-item",
+          "label": "Sub Navigation Items",
+          "name": "subNavItems"
         },
         {
           "component": "richtext",
@@ -209,162 +149,64 @@
       ]
     },
     {
-      "id": "nav-item",
+      "id": "sub-navigation-item",
       "fields": [
         {
           "component": "text",
-          "label": "Nav Item Label",
-          "name": "label",
-          "valueType": "string"
-        },
-        {
-          "component": "aem-content",
-          "label": "Nav Item Link",
-          "name": "link",
-          "valueType": "string"
-        },
-        {
-          "component": "richtext",
-          "label": "Navigation Hierarchy",
-          "name": "hierarchy-tree",
+          "label": "Level 2 Title",
+          "name": "title",
           "valueType": "string"
         },
         {
           "component": "container",
-          "item": "nav-sub-item",
-          "label": "Sub Items",
-          "name": "subItems"
+          "item": "subnav-link-item",
+          "label": "Links",
+          "name": "links"
+        },
+        {
+          "component": "container",
+          "item": "subnav-banner",
+          "label": "Subnav Banners",
+          "name": "subnavBanners"
         }
       ]
     },
     {
-      "id": "nav-sub-item",
-      "fields": [
-        {
-          "component": "text",
-          "label": "Nav Sub Item Label",
-          "name": "label",
-          "valueType": "string"
-        },
-        {
-          "component": "aem-content",
-          "label": "Nav Sub Item Link",
-          "name": "link",
-          "valueType": "string"
-        },
-        {
-          "component": "container",
-          "item": "nav-tertiary-item",
-          "label": "Tertiary Items",
-          "name": "tertiaryItems"
-        },
-        {
-          "component": "container",
-          "item": "nav-sub-banner",
-          "label": "Sub Banner",
-          "name": "subBanner"
-        }
-      ]
-    },
-    {
-      "id": "nav-tertiary-item",
+      "id": "subnav-link-item",
       "fields": [
         {
           "component": "reference",
-          "label": "Tertiary Item Icon",
+          "label": "Icon",
           "name": "icon",
           "valueType": "string"
         },
         {
           "component": "text",
-          "label": "Tertiary Item Label",
-          "name": "label",
+          "label": "Link Text",
+          "name": "text",
           "valueType": "string"
         },
         {
           "component": "aem-content",
-          "label": "Tertiary Item Link",
+          "label": "Link",
           "name": "link",
           "valueType": "string"
         }
       ]
     },
     {
-      "id": "nav-section-banner",
+      "id": "subnav-banner",
       "fields": [
         {
           "component": "reference",
           "label": "Banner Image",
-          "name": "image",
-          "valueType": "string"
-        },
-        {
-          "component": "text",
-          "label": "Image Alt Text",
-          "name": "alt",
+          "name": "bannerImage",
           "valueType": "string"
         },
         {
           "component": "richtext",
           "label": "Banner Description",
-          "name": "description",
-          "valueType": "string"
-        }
-      ]
-    },
-    {
-      "id": "nav-sub-banner",
-      "fields": [
-        {
-          "component": "reference",
-          "label": "Sub Banner Image",
-          "name": "image",
-          "valueType": "string"
-        },
-        {
-          "component": "text",
-          "label": "Image Alt Text",
-          "name": "alt",
-          "valueType": "string"
-        },
-        {
-          "component": "richtext",
-          "label": "Sub Banner Description",
-          "name": "description",
-          "valueType": "string"
-        }
-      ]
-    },
-    {
-      "id": "nav-search-button",
-      "fields": [
-        {
-          "component": "reference",
-          "label": "Button Icon",
-          "name": "icon",
-          "valueType": "string"
-        },
-        {
-          "component": "text",
-          "label": "Aria Label",
-          "name": "aria-label",
-          "valueType": "string"
-        }
-      ]
-    },
-    {
-      "id": "nav-burger-button",
-      "fields": [
-        {
-          "component": "reference",
-          "label": "Button Icon",
-          "name": "icon",
-          "valueType": "string"
-        },
-        {
-          "component": "text",
-          "label": "Aria Label",
-          "name": "aria-label",
+          "name": "bannerDescription",
           "valueType": "string"
         }
       ]
@@ -374,9 +216,10 @@
     {
       "id": "main-navigation",
       "components": [
-        "nav-section",
-        "nav-search-button",
-        "nav-burger-button"
+        "navigation-item",
+        "sub-navigation-item",
+        "subnav-link-item",
+        "subnav-banner"
       ]
     }
   ]

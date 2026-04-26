@@ -17,15 +17,15 @@
       }
     },
     {
-      "title": "Cta-Link-Item",
-      "id": "cta-link-item",
+      "title": "Cta-Link",
+      "id": "cta-link",
       "plugins": {
         "xwalk": {
           "page": {
             "resourceType": "core/franklin/components/block/v1/block/item",
             "template": {
-              "model": "cta-link-item",
-              "name": "Cta-Link-Item"
+              "model": "cta-link",
+              "name": "Cta-Link"
             }
           }
         }
@@ -56,18 +56,18 @@
         },
         {
           "component": "container",
-          "item": "cta-link-item",
+          "item": "cta-link",
           "label": "CTA Links",
-          "name": "ctaLinks"
+          "name": "ctas"
         }
       ]
     },
     {
-      "id": "cta-link-item",
+      "id": "cta-link",
       "fields": [
         {
           "component": "aem-content",
-          "label": "CTA Link",
+          "label": "Link",
           "name": "link",
           "valueType": "string"
         },
@@ -84,7 +84,7 @@
     {
       "id": "home-page-description",
       "components": [
-        "cta-link-item"
+        "cta-link"
       ]
     }
   ]

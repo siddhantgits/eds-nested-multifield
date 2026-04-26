@@ -2,90 +2,91 @@ import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 
 export default function decorate(block) {
-  // Use content detection for root rows instead of direct index access
-  const rootRows = [...block.children];
+  const [
+    mainIconCell,
+    userIconCell,
+    isLoggedInCell,
+    timerCell,
+    signinMsgCell,
+    signoutMsgCell,
+    userMessageCell,
+  ] = [...block.children];
 
-  const backgroundIconCell = rootRows.find(row => row.querySelector('picture') && row.textContent.includes('Background Icon'))?.firstElementChild;
-  const userIconCell = rootRows.find(row => row.querySelector('picture') && row.textContent.includes('User Icon'))?.firstElementChild;
-  const isLoggedInCell = rootRows.find(row => row.textContent.includes('Is Logged In'))?.firstElementChild;
-  const timerCell = rootRows.find(row => row.textContent.includes('Timer (ms)'))?.firstElementChild;
-  const signinMsgCell = rootRows.find(row => row.textContent.includes('Sign In Message'))?.firstElementChild;
-  const signoutMsgCell = rootRows.find(row => row.textContent.includes('Sign Out Message'))?.firstElementChild;
-  const currentUserMessageCell = rootRows.find(row => row.textContent.includes('Current User Message'))?.firstElementChild;
+  const isLoggedIn = isLoggedInCell?.textContent.trim();
+  const timer = timerCell?.textContent.trim();
+  const signinMsg = signinMsgCell?.textContent.trim();
+  const signoutMsg = signoutMsgCell?.textContent.trim();
+  const userMessage = userMessageCell?.textContent.trim();
 
-  const isLoggedIn = isLoggedInCell?.textContent.trim() === 'true';
-  const timer = timerCell?.textContent.trim() || '2000';
-  const signinMsg = signinMsgCell?.textContent.trim() || '';
-  const signoutMsg = signoutMsgCell?.textContent.trim() || '';
-  const currentUserMessage = currentUserMessageCell?.textContent.trim() || '';
+  block.classList.add('toaster', 'toaster-signin');
+  block.setAttribute('data-is-loggedin', isLoggedIn);
+  block.setAttribute('data-timer', timer);
+  block.setAttribute('data-signin-msg', signinMsg);
+  block.setAttribute('data-signout-msg', signoutMsg);
+  block.setAttribute('aria-label', 'Toaster Signin Module');
 
-  const section = document.createElement('section');
-  section.classList.add('toaster', 'toaster-signin');
-  section.setAttribute('data-is-loggedin', isLoggedIn);
-  section.setAttribute('data-timer', timer);
-  section.setAttribute('data-signin-msg', signinMsg);
-  section.setAttribute('data-signout-msg', signoutMsg);
-  section.setAttribute('aria-label', 'Toaster Signin Module');
+  const toasterOverlay = document.createElement('div');
+  toasterOverlay.classList.add('toaster--overlay', 'js-close-toaster');
+  block.append(toasterOverlay);
 
-  const overlay = document.createElement('div');
-  overlay.classList.add('toaster--overlay', 'js-close-toaster');
-  section.append(overlay);
+  const toasterContainer = document.createElement('div');
+  toasterContainer.classList.add('toaster--container');
+  block.append(toasterContainer);
 
-  const container = document.createElement('div');
-  container.classList.add('toaster--container');
-
-  const bgImg = backgroundIconCell?.querySelector('img');
-  if (bgImg) {
-    const optimizedBgPic = createOptimizedPicture(bgImg.src, bgImg.alt, false, [{ width: '750' }]);
-    moveInstrumentation(bgImg.closest('picture'), optimizedBgPic.querySelector('img'));
-    container.append(optimizedBgPic.querySelector('img'));
+  const mainIcon = mainIconCell?.querySelector('picture');
+  if (mainIcon) {
+    const img = mainIcon.querySelector('img');
+    const optimizedPic = createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]);
+    moveInstrumentation(mainIcon, optimizedPic.querySelector('img'));
+    toasterContainer.append(optimizedPic);
   }
 
-  const containerInner = document.createElement('div');
-  containerInner.classList.add('toaster--container-inner');
+  const toasterContainerInner = document.createElement('div');
+  toasterContainerInner.classList.add('toaster--container-inner');
+  toasterContainer.append(toasterContainerInner);
 
-  const messageWrapper = document.createElement('div');
-  messageWrapper.classList.add('toaster--message-wrapper');
+  const toasterMessageWrapper = document.createElement('div');
+  toasterMessageWrapper.classList.add('toaster--message-wrapper');
+  toasterContainerInner.append(toasterMessageWrapper);
 
-  const userDiv = document.createElement('div');
-  userDiv.classList.add('toaster--user');
+  const toasterUser = document.createElement('div');
+  toasterUser.classList.add('toaster--user');
+  toasterMessageWrapper.append(toasterUser);
 
-  const userImg = userIconCell?.querySelector('img');
-  if (userImg) {
-    const optimizedUserPic = createOptimizedPicture(userImg.src, userImg.alt, false, [{ width: '750' }]);
-    moveInstrumentation(userImg.closest('picture'), optimizedUserPic.querySelector('img'));
-    userDiv.append(optimizedUserPic.querySelector('img'));
+  const userIcon = userIconCell?.querySelector('picture');
+  if (userIcon) {
+    const img = userIcon.querySelector('img');
+    const optimizedPic = createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]);
+    moveInstrumentation(userIcon, optimizedPic.querySelector('img'));
+    toasterUser.append(optimizedPic);
   }
-  messageWrapper.append(userDiv);
 
-  const userMessage = document.createElement('div');
-  userMessage.classList.add('toaster--user-message', 'bodySmallRegular');
-  userMessage.textContent = currentUserMessage;
-  messageWrapper.append(userMessage);
+  const toasterUserMessage = document.createElement('div');
+  toasterUserMessage.classList.add('toaster--user-message', 'bodySmallRegular');
+  toasterUserMessage.textContent = userMessage;
+  toasterMessageWrapper.append(toasterUserMessage);
 
-  containerInner.append(messageWrapper);
-
-  const closeDiv = document.createElement('div');
-  closeDiv.classList.add('toaster--close');
+  const toasterClose = document.createElement('div');
+  toasterClose.classList.add('toaster--close');
+  toasterContainerInner.append(toasterClose);
 
   const closeButton = document.createElement('button');
   closeButton.type = 'button';
   closeButton.classList.add('icon', 'cross-icon-black', 'toaster--close-btn', 'js-close-toaster');
   closeButton.setAttribute('aria-label', 'Close tooltip');
-  closeDiv.append(closeButton);
+  toasterClose.append(closeButton);
 
-  containerInner.append(closeDiv);
-  container.append(containerInner);
-  section.append(container);
+  const closeToaster = () => {
+    block.classList.remove('active');
+  };
 
-  block.innerHTML = '';
-  moveInstrumentation(block, section);
-  block.append(section);
+  toasterOverlay.addEventListener('click', closeToaster);
+  closeButton.addEventListener('click', closeToaster);
 
-  const closeTriggers = section.querySelectorAll('.js-close-toaster');
-  closeTriggers.forEach((trigger) => {
-    trigger.addEventListener('click', () => {
-      section.classList.remove('is-open');
-    });
+  // Remove original block content
+  [...block.children].forEach((child) => {
+    if (child !== toasterOverlay && child !== toasterContainer) {
+      child.remove();
+    }
   });
 }

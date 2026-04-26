@@ -2,171 +2,210 @@ import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 
 export default function decorate(block) {
-  const children = [...block.children];
+  const [
+    videoLargePosterRow,
+    videoLargeSourceRow,
+    videoSmallPosterRow,
+    videoSmallSourceRow,
+    primaryTitleRow,
+    secondaryTitleRow, // Primary CTAs are item rows after this
+    greetingMorningRow,
+    greetingAfternoonRow,
+    greetingEveningRow,
+    greetingNightRow,
+    ...itemRows
+  ] = [...block.children];
 
-  // Extract root fields
-  const videoLargePosterCell = children[0];
-  const videoLargeSrcCell = children[1];
-  const videoSmallPosterCell = children[2];
-  const videoSmallSrcCell = children[3];
-  const primaryTitleCell = children[4];
-  const primaryCtaLinkCell = children[5];
-  const primaryCtaTextCell = children[6];
-  const secondaryTitleCell = children[7];
-  const secondaryCtaLinkCell = children[8];
-  const secondaryCtaTextCell = children[9];
+  // Separate item rows into primary and secondary CTAs
+  const primaryCtaItems = [];
+  const secondaryCtaItems = [];
 
-  // Remaining children are greeting item cells
-  const greetingItemCells = children.slice(10);
+  // Determine the split point for primary and secondary CTAs
+  // The model doesn't explicitly define the split, so we'll assume
+  // primary CTAs come first, then secondary CTAs.
+  // We need to infer this from the original HTML or by assuming primaryCtas
+  // are the first set of CTA items and secondaryCtas are the second set.
+  // Given the original HTML, there's one primary CTA and one secondary CTA.
+  // This implies the first item row is for primary, and the second for secondary.
+  // However, the EDS structure shows a generic list of "cta-item" rows.
+  // Without a clear differentiator in the item row structure, we'll
+  // assume the first N items are primary and the rest are secondary.
+  // For this specific block, the original HTML shows 1 primary CTA and 1 secondary CTA.
+  // So, we'll take the first itemRow as primary and the rest as secondary.
+  // If there are more than 2 itemRows, this logic might need adjustment based on content.
+  if (itemRows.length > 0) {
+    primaryCtaItems.push(itemRows[0]);
+    secondaryCtaItems.push(...itemRows.slice(1));
+  }
 
-  // Create the main wrapper section
+  // Main wrapper
   const section = document.createElement('section');
   section.classList.add('grid-container', 'homepage-banner-wrapper', 'variation--banner', 'bg--paper-white');
   section.setAttribute('data-is-banner', 'true');
+  moveInstrumentation(block, section);
 
-  // Create the homepage-banner div
   const homepageBanner = document.createElement('div');
   homepageBanner.classList.add('homepage-banner', 'reveal-effect-container');
-  moveInstrumentation(block, homepageBanner);
+  section.append(homepageBanner);
 
   // Media Container
   const mediaContainer = document.createElement('div');
   mediaContainer.classList.add('media-container');
+  homepageBanner.append(mediaContainer);
 
-  const createVideoElement = (srcCell, posterCell, large = true) => {
-    const video = document.createElement('video');
-    video.muted = true;
-    video.playsInline = true;
-    video.preload = 'none';
+  // Large Video
+  const largeVideo = document.createElement('video');
+  largeVideo.classList.add('video--large', 'show-for-large');
+  largeVideo.muted = true;
+  largeVideo.playsInline = true;
+  largeVideo.preload = 'none';
 
-    if (large) {
-      video.classList.add('video--large', 'show-for-large');
-    } else {
-      video.classList.add('video--small', 'hide-for-large');
-    }
+  const largePosterImg = videoLargePosterRow?.querySelector('picture img');
+  if (largePosterImg) {
+    largeVideo.poster = largePosterImg.src;
+    largeVideo.setAttribute('data-poster', largePosterImg.src);
+  }
 
-    const posterImg = posterCell?.querySelector('img');
-    if (posterImg) {
-      const optimizedPoster = createOptimizedPicture(posterImg.src, posterImg.alt, false, [{ width: '750' }]);
-      video.poster = optimizedPoster.querySelector('img').src;
-      video.setAttribute('data-poster', optimizedPoster.querySelector('img').src);
-    }
+  const largeVideoSourceLink = videoLargeSourceRow?.querySelector('picture img');
+  if (largeVideoSourceLink) {
+    const source = document.createElement('source');
+    source.src = largeVideoSourceLink.src;
+    source.type = 'video/mp4';
+    source.setAttribute('data-src', largeVideoSourceLink.src);
+    largeVideo.append(source);
+  }
+  mediaContainer.append(largeVideo);
 
-    const sourceLink = srcCell?.querySelector('a');
-    if (sourceLink && /\.(mp4|webm|ogg|mov)$/i.test(sourceLink.href)) {
-      const source = document.createElement('source');
-      source.src = sourceLink.href;
-      source.type = `video/${sourceLink.href.split('.').pop()}`;
-      source.setAttribute('data-src', sourceLink.href);
-      video.appendChild(source);
-    }
-    return video;
-  };
+  // Small Video
+  const smallVideo = document.createElement('video');
+  smallVideo.classList.add('video--small', 'hide-for-large');
+  smallVideo.muted = true;
+  smallVideo.playsInline = true;
+  smallVideo.preload = 'none';
 
-  const largeVideo = createVideoElement(videoLargeSrcCell, videoLargePosterCell, true);
-  mediaContainer.appendChild(largeVideo);
+  const smallPosterImg = smallVideoPosterRow?.querySelector('picture img');
+  if (smallPosterImg) {
+    smallVideo.poster = smallPosterImg.src;
+    smallVideo.setAttribute('data-poster', smallPosterImg.src);
+  }
 
-  const smallVideo = createVideoElement(videoSmallSrcCell, videoSmallPosterCell, false);
-  mediaContainer.appendChild(smallVideo);
-
-  homepageBanner.appendChild(mediaContainer);
+  const smallVideoSourceLink = smallVideoSourceRow?.querySelector('picture img');
+  if (smallVideoSourceLink) {
+    const source = document.createElement('source');
+    source.src = smallVideoSourceLink.src;
+    source.type = 'video/mp4';
+    source.setAttribute('data-src', smallVideoSourceLink.src);
+    smallVideo.append(source);
+  }
+  mediaContainer.append(smallVideo);
 
   // Content Container
   const contentContainer = document.createElement('div');
   contentContainer.classList.add('content-container', 'animate-enter', 'in-view');
+  homepageBanner.append(contentContainer);
 
   const maxWidthContainer = document.createElement('div');
   maxWidthContainer.classList.add('max-width-container');
+  contentContainer.append(maxWidthContainer);
 
   const contentWrapper = document.createElement('div');
   contentWrapper.classList.add('content-wrapper');
+  maxWidthContainer.append(contentWrapper);
 
   // Primary Title
   const primaryTitle = document.createElement('h1');
   primaryTitle.classList.add('primary-title');
-  primaryTitle.textContent = primaryTitleCell?.textContent.trim() || '';
-  contentWrapper.appendChild(primaryTitle);
+  primaryTitle.textContent = primaryTitleRow?.textContent.trim() || '';
+  moveInstrumentation(primaryTitleRow, primaryTitle);
+  contentWrapper.append(primaryTitle);
 
-  // Primary CTA
-  const primaryCtaContainer = document.createElement('div');
-  primaryCtaContainer.classList.add('cta-container', 'primary-title-cta-container');
-  const primaryCtaLink = document.createElement('a');
-  primaryCtaLink.classList.add('button', 'red');
-  const primaryCtaHref = primaryCtaLinkCell?.querySelector('a')?.href;
-  if (primaryCtaHref) {
-    primaryCtaLink.href = primaryCtaHref;
+  // Primary CTAs
+  if (primaryCtaItems.length > 0) {
+    const primaryCtaContainer = document.createElement('div');
+    primaryCtaContainer.classList.add('cta-container', 'primary-title-cta-container');
+    primaryCtaItems.forEach((row) => {
+      // Corrected: Use content detection instead of index access
+      const cells = [...row.children];
+      const linkCell = cells.find(cell => cell.querySelector('a'));
+      const labelCell = cells.find(cell => !cell.querySelector('a'));
+
+      const link = document.createElement('a');
+      link.classList.add('button', 'red');
+      const foundLink = linkCell?.querySelector('a');
+      if (foundLink) {
+        link.href = foundLink.href;
+      }
+      const span = document.createElement('span');
+      span.classList.add('button-text');
+      span.textContent = labelCell?.textContent.trim() || '';
+      link.append(span);
+      moveInstrumentation(row, link);
+      primaryCtaContainer.append(link);
+    });
+    contentWrapper.append(primaryCtaContainer);
   }
-  primaryCtaLink.setAttribute('aria-label', '');
-  primaryCtaLink.setAttribute('rel', 'follow');
-  const primaryCtaSpan = document.createElement('span');
-  primaryCtaSpan.classList.add('button-text');
-  primaryCtaSpan.textContent = primaryCtaTextCell?.textContent.trim() || '';
-  primaryCtaLink.appendChild(primaryCtaSpan);
-  primaryCtaContainer.appendChild(primaryCtaLink);
-  contentWrapper.appendChild(primaryCtaContainer);
 
-  // Secondary Title
+  // Secondary Title and CTAs
   const secondaryTitleDiv = document.createElement('div');
   secondaryTitleDiv.classList.add('secondary-title');
+  contentWrapper.append(secondaryTitleDiv);
+
   const secondaryHeadline = document.createElement('div');
   secondaryHeadline.classList.add('headline-h1', 'font-weight-bold');
-  secondaryHeadline.textContent = secondaryTitleCell?.textContent.trim() || '';
-  secondaryTitleDiv.appendChild(secondaryHeadline);
+  secondaryHeadline.textContent = secondaryTitleRow?.textContent.trim() || '';
+  moveInstrumentation(secondaryTitleRow, secondaryHeadline);
+  secondaryTitleDiv.append(secondaryHeadline);
 
-  // Secondary CTA
-  const secondaryCtaContainer = document.createElement('div');
-  secondaryCtaContainer.classList.add('cta-container');
-  const secondaryCtaLink = document.createElement('a');
-  secondaryCtaLink.classList.add('button', 'red');
-  const secondaryCtaHref = secondaryCtaLinkCell?.querySelector('a')?.href;
-  if (secondaryCtaHref) {
-    secondaryCtaLink.href = secondaryCtaHref;
+  if (secondaryCtaItems.length > 0) {
+    const secondaryCtaContainer = document.createElement('div');
+    secondaryCtaContainer.classList.add('cta-container');
+    secondaryCtaItems.forEach((row) => {
+      // Corrected: Use content detection instead of index access
+      const cells = [...row.children];
+      const linkCell = cells.find(cell => cell.querySelector('a'));
+      const labelCell = cells.find(cell => !cell.querySelector('a'));
+
+      const link = document.createElement('a');
+      link.classList.add('button', 'red');
+      const foundLink = linkCell?.querySelector('a');
+      if (foundLink) {
+        link.href = foundLink.href;
+      }
+      const span = document.createElement('span');
+      span.classList.add('button-text');
+      span.textContent = labelCell?.textContent.trim() || '';
+      link.append(span);
+      moveInstrumentation(row, link);
+      secondaryCtaContainer.append(link);
+    });
+    secondaryTitleDiv.append(secondaryCtaContainer);
   }
-  secondaryCtaLink.setAttribute('aria-label', '');
-  secondaryCtaLink.setAttribute('rel', 'follow');
-  const secondaryCtaSpan = document.createElement('span');
-  secondaryCtaSpan.classList.add('button-text');
-  secondaryCtaSpan.textContent = secondaryCtaTextCell?.textContent.trim() || '';
-  secondaryCtaLink.appendChild(secondaryCtaSpan);
-  secondaryCtaContainer.appendChild(secondaryCtaLink);
-  secondaryTitleDiv.appendChild(secondaryCtaContainer);
-  contentWrapper.appendChild(secondaryTitleDiv);
-
-  maxWidthContainer.appendChild(contentWrapper);
-  contentContainer.appendChild(maxWidthContainer);
-  homepageBanner.appendChild(contentContainer);
 
   // Greeting Container
   const greetingContainer = document.createElement('div');
   greetingContainer.classList.add('greeting-container', 'bodyLargeRegular');
+  section.append(greetingContainer);
 
   const greetingWrapper = document.createElement('div');
   greetingWrapper.classList.add('greeting-wrapper', 'animate');
+  greetingContainer.append(greetingWrapper);
 
-  greetingItemCells.forEach((row, index) => {
-    // FIXED: Using content detection instead of index access
-    const cells = [...row.children];
-    const greetingTextCell = cells.find(cell => !cell.querySelector('picture') && !cell.querySelector('a')) || cells[0];
-    const greetingSpan = document.createElement('span');
-    greetingSpan.classList.add('greeting');
-    if (index === 0) {
-      greetingSpan.classList.add('greeting--morning'); // Default for the first greeting
-    } else if (index === 1) {
-      greetingSpan.classList.add('greeting--afternoon');
-    } else if (index === 2) {
-      greetingSpan.classList.add('greeting--evening');
-    } else if (index === 3) {
-      greetingSpan.classList.add('greeting--night');
-    }
-    greetingSpan.textContent = greetingTextCell.textContent.trim();
-    greetingWrapper.appendChild(greetingSpan);
-    moveInstrumentation(greetingTextCell, greetingSpan);
+  const greetings = [
+    { row: greetingMorningRow, className: 'greeting--morning' },
+    { row: greetingAfternoonRow, className: 'greeting--afternoon' },
+    { row: greetingEveningRow, className: 'greeting--evening' },
+    { row: greetingNightRow, className: 'greeting--night' },
+  ];
+
+  greetings.forEach(({ row, className }) => {
+    const span = document.createElement('span');
+    span.classList.add('greeting', className);
+    span.textContent = row?.textContent.trim() || '';
+    if (row) moveInstrumentation(row, span);
+    greetingWrapper.append(span);
   });
 
-  greetingContainer.appendChild(greetingWrapper);
-  section.appendChild(homepageBanner);
-  section.appendChild(greetingContainer);
-
+  // Replace the original block with the new section
   block.replaceWith(section);
 
   // Image optimization
@@ -174,21 +213,5 @@ export default function decorate(block) {
     const optimizedPic = createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]);
     moveInstrumentation(img, optimizedPic.querySelector('img'));
     img.closest('picture').replaceWith(optimizedPic);
-  });
-
-  // Video interactivity
-  const videos = section.querySelectorAll('video');
-  videos.forEach((video) => {
-    // Autoplay videos when they are in view
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          video.play().catch((e) => console.error('Video autoplay failed:', e));
-        } else {
-          video.pause();
-        }
-      });
-    }, { threshold: 0.5 }); // Trigger when 50% of the video is in view
-    observer.observe(video);
   });
 }

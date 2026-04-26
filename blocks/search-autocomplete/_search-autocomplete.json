@@ -17,15 +17,15 @@
       }
     },
     {
-      "title": "Trending-Suggestion",
-      "id": "trending-suggestion",
+      "title": "Search-Suggestion-Item",
+      "id": "search-suggestion-item",
       "plugins": {
         "xwalk": {
           "page": {
             "resourceType": "core/franklin/components/block/v1/block/item",
             "template": {
-              "model": "trending-suggestion",
-              "name": "Trending-Suggestion"
+              "model": "search-suggestion-item",
+              "name": "Search-Suggestion-Item"
             }
           }
         }
@@ -44,8 +44,8 @@
         },
         {
           "component": "text",
-          "label": "Search Form Action URL",
-          "name": "formAction",
+          "label": "Search Action URL",
+          "name": "searchAction",
           "valueType": "string"
         },
         {
@@ -56,20 +56,14 @@
         },
         {
           "component": "text",
-          "label": "Search Input Placeholder",
-          "name": "searchInputPlaceholder",
+          "label": "Search Input Label",
+          "name": "searchInputLabel",
           "valueType": "string"
         },
         {
           "component": "text",
-          "label": "Search Input Autocomplete Path",
-          "name": "searchInputAutocompletePath",
-          "valueType": "string"
-        },
-        {
-          "component": "text",
-          "label": "Submit Button Label",
-          "name": "submitLabel",
+          "label": "Search Button Label",
+          "name": "searchButtonLabel",
           "valueType": "string"
         },
         {
@@ -80,25 +74,25 @@
         },
         {
           "component": "container",
-          "item": "trending-suggestion",
-          "label": "Trending Suggestions",
+          "item": "search-suggestion-item",
+          "label": "Suggestions",
           "name": "suggestions"
         }
       ]
     },
     {
-      "id": "trending-suggestion",
+      "id": "search-suggestion-item",
       "fields": [
-        {
-          "component": "aem-content",
-          "label": "Suggestion Link",
-          "name": "link",
-          "valueType": "string"
-        },
         {
           "component": "text",
           "label": "Suggestion Label",
           "name": "label",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Suggestion Link",
+          "name": "link",
           "valueType": "string"
         }
       ]
@@ -108,7 +102,7 @@
     {
       "id": "search-autocomplete",
       "components": [
-        "trending-suggestion"
+        "search-suggestion-item"
       ]
     }
   ]

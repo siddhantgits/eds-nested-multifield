@@ -1,7 +1,7 @@
 {
   "definitions": [
     {
-      "title": "Campaign-Carousel",
+      "title": "Campaign Carousel",
       "id": "campaign-carousel",
       "plugins": {
         "xwalk": {
@@ -10,14 +10,14 @@
             "template": {
               "filter": "campaign-carousel",
               "model": "campaign-carousel",
-              "name": "Campaign-Carousel"
+              "name": "Campaign Carousel"
             }
           }
         }
       }
     },
     {
-      "title": "Quotation-Slide",
+      "title": "Quotation Slide",
       "id": "quotation-slide",
       "plugins": {
         "xwalk": {
@@ -25,14 +25,14 @@
             "resourceType": "core/franklin/components/block/v1/block/item",
             "template": {
               "model": "quotation-slide",
-              "name": "Quotation-Slide"
+              "name": "Quotation Slide"
             }
           }
         }
       }
     },
     {
-      "title": "Recipe-Card-Slide",
+      "title": "Recipe Card Slide",
       "id": "recipe-card-slide",
       "plugins": {
         "xwalk": {
@@ -40,14 +40,14 @@
             "resourceType": "core/franklin/components/block/v1/block/item",
             "template": {
               "model": "recipe-card-slide",
-              "name": "Recipe-Card-Slide"
+              "name": "Recipe Card Slide"
             }
           }
         }
       }
     },
     {
-      "title": "Fact-Card-Slide",
+      "title": "Fact Card Slide",
       "id": "fact-card-slide",
       "plugins": {
         "xwalk": {
@@ -55,7 +55,7 @@
             "resourceType": "core/franklin/components/block/v1/block/item",
             "template": {
               "model": "fact-card-slide",
-              "name": "Fact-Card-Slide"
+              "name": "Fact Card Slide"
             }
           }
         }
@@ -74,8 +74,8 @@
         },
         {
           "component": "text",
-          "label": "Title",
-          "name": "title",
+          "label": "Heading",
+          "name": "heading",
           "valueType": "string"
         },
         {
@@ -109,8 +109,8 @@
       "fields": [
         {
           "component": "richtext",
-          "label": "Quotation Text",
-          "name": "text",
+          "label": "Quote Text",
+          "name": "quoteText",
           "valueType": "string"
         },
         {
@@ -138,7 +138,7 @@
         },
         {
           "component": "reference",
-          "label": "Recipe Image",
+          "label": "Image",
           "name": "image",
           "valueType": "string"
         },
@@ -156,7 +156,7 @@
         },
         {
           "component": "text",
-          "label": "Recipe Description",
+          "label": "Description",
           "name": "description",
           "valueType": "string"
         },
@@ -179,19 +179,19 @@
       "fields": [
         {
           "component": "reference",
-          "label": "Fact Card Image",
+          "label": "Image",
           "name": "image",
           "valueType": "string"
         },
         {
           "component": "text",
-          "label": "Fact Card Name",
+          "label": "Title",
           "name": "name",
           "valueType": "string"
         },
         {
           "component": "richtext",
-          "label": "Fact Card Description",
+          "label": "Description",
           "name": "description",
           "valueType": "string"
         },

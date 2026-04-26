@@ -17,15 +17,15 @@
       }
     },
     {
-      "title": "Greeting-Item",
-      "id": "greeting-item",
+      "title": "CTA-Item",
+      "id": "cta-item",
       "plugins": {
         "xwalk": {
           "page": {
             "resourceType": "core/franklin/components/block/v1/block/item",
             "template": {
-              "model": "greeting-item",
-              "name": "Greeting-Item"
+              "model": "cta-item",
+              "name": "CTA-Item"
             }
           }
         }
@@ -45,7 +45,7 @@
         {
           "component": "reference",
           "label": "Large Video Source",
-          "name": "videoLargeSrc",
+          "name": "videoLargeSource",
           "valueType": "string"
         },
         {
@@ -57,7 +57,7 @@
         {
           "component": "reference",
           "label": "Small Video Source",
-          "name": "videoSmallSrc",
+          "name": "videoSmallSource",
           "valueType": "string"
         },
         {
@@ -67,16 +67,10 @@
           "valueType": "string"
         },
         {
-          "component": "aem-content",
-          "label": "Primary CTA Link",
-          "name": "primaryCtaLink",
-          "valueType": "string"
-        },
-        {
-          "component": "text",
-          "label": "Primary CTA Text",
-          "name": "primaryCtaText",
-          "valueType": "string"
+          "component": "container",
+          "item": "cta-item",
+          "label": "Primary CTA(s)",
+          "name": "primaryCtas"
         },
         {
           "component": "text",
@@ -85,32 +79,50 @@
           "valueType": "string"
         },
         {
-          "component": "aem-content",
-          "label": "Secondary CTA Link",
-          "name": "secondaryCtaLink",
+          "component": "container",
+          "item": "cta-item",
+          "label": "Secondary CTA(s)",
+          "name": "secondaryCtas"
+        },
+        {
+          "component": "text",
+          "label": "Greeting Morning",
+          "name": "greetingMorning",
           "valueType": "string"
         },
         {
           "component": "text",
-          "label": "Secondary CTA Text",
-          "name": "secondaryCtaText",
+          "label": "Greeting Afternoon",
+          "name": "greetingAfternoon",
           "valueType": "string"
         },
         {
-          "component": "container",
-          "item": "greeting-item",
-          "label": "Greetings",
-          "name": "greetings"
+          "component": "text",
+          "label": "Greeting Evening",
+          "name": "greetingEvening",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Greeting Night",
+          "name": "greetingNight",
+          "valueType": "string"
         }
       ]
     },
     {
-      "id": "greeting-item",
+      "id": "cta-item",
       "fields": [
         {
+          "component": "aem-content",
+          "label": "CTA Link",
+          "name": "link",
+          "valueType": "string"
+        },
+        {
           "component": "text",
-          "label": "Greeting Text",
-          "name": "greetingText",
+          "label": "CTA Label",
+          "name": "label",
           "valueType": "string"
         }
       ]
@@ -120,7 +132,7 @@
     {
       "id": "homepage-banner",
       "components": [
-        "greeting-item"
+        "cta-item"
       ]
     }
   ]

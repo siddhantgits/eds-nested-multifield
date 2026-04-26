@@ -23,8 +23,8 @@
       "fields": [
         {
           "component": "reference",
-          "label": "Background Icon",
-          "name": "backgroundIcon",
+          "label": "Main Icon",
+          "name": "mainIcon",
           "valueType": "string"
         },
         {
@@ -59,8 +59,8 @@
         },
         {
           "component": "text",
-          "label": "Current User Message",
-          "name": "currentUserMessage",
+          "label": "User Message",
+          "name": "userMessage",
           "valueType": "string"
         }
       ]

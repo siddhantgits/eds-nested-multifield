@@ -17,15 +17,15 @@
       }
     },
     {
-      "title": "Recipe-Home-List-Item",
-      "id": "recipe-home-list-item",
+      "title": "Recipe-Card-Item",
+      "id": "recipe-card-item",
       "plugins": {
         "xwalk": {
           "page": {
             "resourceType": "core/franklin/components/block/v1/block/item",
             "template": {
-              "model": "recipe-home-list-item",
-              "name": "Recipe-Home-List-Item"
+              "model": "recipe-card-item",
+              "name": "Recipe-Card-Item"
             }
           }
         }
@@ -55,27 +55,27 @@
           "valueType": "string"
         },
         {
-          "component": "container",
-          "item": "recipe-home-list-item",
-          "label": "Recipes",
-          "name": "recipes"
-        },
-        {
           "component": "aem-content",
-          "label": "CTA Link",
+          "label": "See All Recipes Link",
           "name": "ctaLink",
           "valueType": "string"
         },
         {
           "component": "text",
-          "label": "CTA Label",
+          "label": "See All Recipes Label",
           "name": "ctaLabel",
           "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "recipe-card-item",
+          "label": "Recipes",
+          "name": "recipes"
         }
       ]
     },
     {
-      "id": "recipe-home-list-item",
+      "id": "recipe-card-item",
       "fields": [
         {
           "component": "aem-content",
@@ -91,20 +91,26 @@
         },
         {
           "component": "text",
+          "label": "Image Alt Text",
+          "name": "altText",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Tag",
+          "name": "tag",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
           "label": "Recipe Name",
           "name": "name",
           "valueType": "string"
         },
         {
           "component": "text",
-          "label": "Recipe Description",
+          "label": "Description",
           "name": "description",
-          "valueType": "string"
-        },
-        {
-          "component": "text",
-          "label": "Recipe Tag",
-          "name": "tag",
           "valueType": "string"
         },
         {
@@ -126,7 +132,7 @@
     {
       "id": "recipe-home",
       "components": [
-        "recipe-home-list-item"
+        "recipe-card-item"
       ]
     }
   ]

@@ -38,14 +38,14 @@
       "fields": [
         {
           "component": "text",
-          "label": "Carousel Title",
+          "label": "Title",
           "name": "title",
           "valueType": "string"
         },
         {
           "component": "container",
           "item": "sustainability-article-card",
-          "label": "Sustainability Article Cards",
+          "label": "Cards",
           "name": "cards"
         }
       ]
@@ -54,9 +54,9 @@
       "id": "sustainability-article-card",
       "fields": [
         {
-          "component": "aem-content",
-          "label": "Article Link",
-          "name": "link",
+          "component": "reference",
+          "label": "Image",
+          "name": "image",
           "valueType": "string"
         },
         {
@@ -66,33 +66,27 @@
           "valueType": "string"
         },
         {
-          "component": "reference",
-          "label": "Card Image",
-          "name": "image",
-          "valueType": "string"
-        },
-        {
           "component": "text",
           "label": "Card Title",
           "name": "title",
           "valueType": "string"
         },
         {
-          "component": "text",
+          "component": "richtext",
           "label": "Card Description",
           "name": "description",
           "valueType": "string"
         },
         {
-          "component": "text",
-          "label": "Reading Duration",
+          "component": "number",
+          "label": "Reading Duration (mins)",
           "name": "readingDuration",
-          "valueType": "string"
+          "valueType": "number"
         },
         {
-          "component": "text",
-          "label": "Reading Duration Suffix",
-          "name": "readingDurationSuffix",
+          "component": "aem-content",
+          "label": "Card Link",
+          "name": "link",
           "valueType": "string"
         }
       ]

@@ -2,196 +2,171 @@ import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 
 export default function decorate(block) {
+  const children = [...block.children];
+
+  // Fixed fields
   const [
-    bgImageRow,
+    backgroundImageRow,
     headingRow,
     greetingMorningRow,
     greetingAfternoonRow,
     greetingEveningRow,
     greetingNightRow,
-    introTextRow,
+    guideTextRow,
     errorMessageRow,
-    ...itemRows
-  ] = [...block.children];
+  ] = children.slice(0, 8);
 
-  block.innerHTML = '';
-  block.classList.add('grid-container', 'animate-enter', 'in-view');
+  const backgroundImage = backgroundImageRow.querySelector('picture');
+  const heading = headingRow.textContent.trim();
+  const greetingMorning = greetingMorningRow.textContent.trim();
+  const greetingAfternoon = greetingAfternoonRow.textContent.trim();
+  const greetingEvening = greetingEveningRow.textContent.trim();
+  const greetingNight = greetingNightRow.textContent.trim();
+  const guideText = guideTextRow.textContent.trim();
+  const errorMessage = errorMessageRow.textContent.trim();
 
-  // Background Image
+  // Item rows
+  const itemRows = children.slice(8);
+
+  const slides = [];
+  const options = [];
+
+  itemRows.forEach((row) => {
+    if (row.children.length === 4) { // profiler-slide
+      const [questionIdCell, questionLabelCell, questionFilterCell] = [...row.children];
+      slides.push({
+        questionId: questionIdCell.textContent.trim(),
+        questionLabel: questionLabelCell.textContent.trim(),
+        questionFilter: questionFilterCell.textContent.trim(),
+        options: [], // Will be populated later
+      });
+      moveInstrumentation(row, document.createElement('div')); // Move instrumentation for profiler-slide row
+    } else if (row.children.length === 8) { // profiler-option
+      const [
+        optionIdCell,
+        questionIdCell,
+        optionLabelCell,
+        optionIconCell,
+        optionFilterValsCell,
+        optionFilterCell,
+        optionExcFilterCell,
+        optionAriaLabelCell,
+      ] = [...row.children];
+
+      const optionIconPicture = optionIconCell.querySelector('picture');
+      const optionIconImg = optionIconPicture ? optionIconPicture.querySelector('img') : null;
+
+      options.push({
+        optionId: optionIdCell.textContent.trim(),
+        questionId: questionIdCell.textContent.trim(),
+        optionLabel: optionLabelCell.textContent.trim(),
+        optionIcon: optionIconImg ? createOptimizedPicture(optionIconImg.src, optionIconImg.alt, false, [{ width: '750' }]) : null,
+        optionFilterVals: optionFilterValsCell.textContent.trim(),
+        optionFilter: optionFilterCell.textContent.trim(),
+        optionExcFilter: optionExcFilterCell.textContent.trim(),
+        optionAriaLabel: optionAriaLabelCell.textContent.trim(),
+      });
+      moveInstrumentation(row, document.createElement('div')); // Move instrumentation for profiler-option row
+    }
+  });
+
+  // Populate options into slides
+  slides.forEach((slide) => {
+    slide.options = options.filter((option) => option.questionId === slide.questionId);
+  });
+
+  block.innerHTML = ''; // Clear the block
+
+  const section = document.createElement('section');
+  section.classList.add('grid-container', 'coffee-profiler', 'animate-enter', 'in-view');
+  section.setAttribute('data-api-url', 'https://www.nescafe.com/in/nc/cprofiler-status'); // Hardcoded as per original HTML
+
+  const bgPaperBlue = document.createElement('div');
+  bgPaperBlue.classList.add('bg--paper-blue', 'dummy-to-load-bg');
+  section.append(bgPaperBlue);
+
+  const bgPaperWhiteHeavy = document.createElement('div');
+  bgPaperWhiteHeavy.classList.add('bg--paper-white-heavy', 'dummy-to-load-bg');
+  section.append(bgPaperWhiteHeavy);
+
   const parallaxBgImgContainer = document.createElement('div');
   parallaxBgImgContainer.classList.add('parallax-bg-img-container');
   const parallaxImg = document.createElement('div');
   parallaxImg.classList.add('parallax-img', 'lazyLoadedImage');
-  const bgImage = bgImageRow.querySelector('picture img');
-  if (bgImage) {
-    parallaxImg.style.backgroundImage = `url(${bgImage.src})`;
-    moveInstrumentation(bgImageRow, parallaxImg);
+  if (backgroundImage) {
+    const optimizedPic = createOptimizedPicture(backgroundImage.querySelector('img').src, backgroundImage.querySelector('img').alt, false, [{ width: '2000' }]);
+    parallaxImg.style.backgroundImage = `url(${optimizedPic.querySelector('img').src})`;
+    moveInstrumentation(backgroundImage, optimizedPic.querySelector('img'));
   }
   parallaxBgImgContainer.append(parallaxImg);
-  block.append(parallaxBgImgContainer);
+  section.append(parallaxBgImgContainer);
 
   const maxWidthContainer = document.createElement('div');
   maxWidthContainer.classList.add('max-width-container', 'grid-x');
-  block.append(maxWidthContainer);
 
-  const contentCellWrapper = document.createElement('div');
-  contentCellWrapper.classList.add(
-    'cell',
-    'small-12',
-    'medium-offset-1',
-    'medium-10',
-    'xlarge-offset-2',
-    'xlarge-8',
-    'padding-x',
-  );
-  maxWidthContainer.append(contentCellWrapper);
+  const headerCell = document.createElement('div');
+  headerCell.classList.add('cell', 'small-12', 'medium-offset-1', 'medium-10', 'xlarge-offset-2', 'xlarge-8', 'padding-x');
 
-  // Heading
-  const heading = document.createElement('h2');
-  heading.classList.add(
-    'heading',
-    'animate-enter-fade-up-short',
-    'animate-delay-3',
-  );
-  heading.textContent = headingRow.textContent.trim();
-  moveInstrumentation(headingRow, heading);
-  contentCellWrapper.append(heading);
+  const h2 = document.createElement('h2');
+  h2.classList.add('heading', 'animate-enter-fade-up-short', 'animate-delay-3');
+  h2.textContent = heading;
+  headerCell.append(h2);
 
   const introInfo = document.createElement('div');
-  introInfo.classList.add(
-    'intro-info',
-    'animate-enter-fade',
-    'animate-delay-1',
-    'no-avatar-image',
-  );
-  contentCellWrapper.append(introInfo);
+  introInfo.classList.add('intro-info', 'animate-enter-fade', 'animate-delay-1', 'no-avatar-image');
 
-  // Greetings Container
   const greetingsContainer = document.createElement('div');
-  greetingsContainer.classList.add(
-    'greetings-container',
-    'headline-h4',
-    'animate-enter-fade-up-short',
-    'animate-delay-3',
-    'stagger-1',
-  );
+  greetingsContainer.classList.add('greetings-container', 'headline-h4', 'animate-enter-fade-up-short', 'animate-delay-3', 'stagger-1');
+
+  const greetingMorningSpan = document.createElement('span');
+  greetingMorningSpan.classList.add('hide', 'greeting--morning');
+  greetingMorningSpan.textContent = greetingMorning;
+  greetingsContainer.append(greetingMorningSpan);
+
+  const greetingAfternoonSpan = document.createElement('span');
+  greetingAfternoonSpan.classList.add('greeting--afternoon');
+  greetingAfternoonSpan.textContent = greetingAfternoon;
+  greetingsContainer.append(greetingAfternoonSpan);
+
+  const greetingEveningSpan = document.createElement('span');
+  greetingEveningSpan.classList.add('hide', 'greeting--evening');
+  greetingEveningSpan.textContent = greetingEvening;
+  greetingsContainer.append(greetingEveningSpan);
+
+  const greetingNightSpan = document.createElement('span');
+  greetingNightSpan.classList.add('hide', 'greeting--night');
+  greetingNightSpan.textContent = greetingNight;
+  greetingsContainer.append(greetingNightSpan);
+
   introInfo.append(greetingsContainer);
 
-  const createGreetingSpan = (text, className) => {
-    const span = document.createElement('span');
-    span.classList.add(className);
-    span.textContent = text;
-    return span;
-  };
+  const guideTextDiv = document.createElement('div');
+  guideTextDiv.classList.add('guide-text', 'labelMediumRegular', 'animate-enter-fade-up-short', 'animate-delay-6');
+  guideTextDiv.textContent = guideText;
+  introInfo.append(guideTextDiv);
 
-  const greetingMorning = createGreetingSpan(
-    greetingMorningRow.textContent.trim(),
-    'greeting--morning',
-  );
-  moveInstrumentation(greetingMorningRow, greetingMorning);
-  greetingsContainer.append(greetingMorning);
+  headerCell.append(introInfo);
+  maxWidthContainer.append(headerCell);
 
-  const greetingAfternoon = createGreetingSpan(
-    greetingAfternoonRow.textContent.trim(),
-    'greeting--afternoon',
-  );
-  greetingAfternoon.classList.add('hide');
-  moveInstrumentation(greetingAfternoonRow, greetingAfternoon);
-  greetingsContainer.append(greetingAfternoon);
-
-  const greetingEvening = createGreetingSpan(
-    greetingEveningRow.textContent.trim(),
-    'greeting--evening',
-  );
-  greetingEvening.classList.add('hide');
-  moveInstrumentation(greetingEveningRow, greetingEvening);
-  greetingsContainer.append(greetingEvening);
-
-  const greetingNight = createGreetingSpan(
-    greetingNightRow.textContent.trim(),
-    'greeting--night',
-  );
-  greetingNight.classList.add('hide');
-  moveInstrumentation(greetingNightRow, greetingNight);
-  greetingsContainer.append(greetingNight);
-
-  const guideText = document.createElement('div');
-  guideText.classList.add(
-    'guide-text',
-    'labelMediumRegular',
-    'animate-enter-fade-up-short',
-    'animate-delay-6',
-  );
-  guideText.textContent = introTextRow.textContent.trim();
-  moveInstrumentation(introTextRow, guideText);
-  introInfo.append(guideText);
-
-  // Swiper Pagination Container
-  const swiperPaginationContainer = document.createElement('div');
-  swiperPaginationContainer.classList.add(
-    'cell',
-    'small-12',
-    'medium-offset-1',
-    'medium-10',
-    'xlarge-offset-2',
-    'xlarge-8',
-    'swiper-pagination-container',
-    'padding-x',
-    'animate-enter-fade-up-short',
-    'animate-delay-15',
-  );
-  maxWidthContainer.append(swiperPaginationContainer);
-
+  const paginationCell = document.createElement('div');
+  paginationCell.classList.add('cell', 'small-12', 'medium-offset-1', 'medium-10', 'xlarge-offset-2', 'xlarge-8', 'swiper-pagination-container', 'padding-x', 'animate-enter-fade-up-short', 'animate-delay-15');
   const swiperPagination = document.createElement('div');
-  swiperPagination.classList.add(
-    'swiper-pagination',
-    'swiper-pagination-progressbar',
-    'swiper-pagination-horizontal',
-  );
-  swiperPaginationContainer.append(swiperPagination);
-
+  swiperPagination.classList.add('swiper-pagination', 'swiper-pagination-progressbar', 'swiper-pagination-horizontal');
   const swiperPaginationFill = document.createElement('span');
   swiperPaginationFill.classList.add('swiper-pagination-progressbar-fill');
   swiperPagination.append(swiperPaginationFill);
+  paginationCell.append(swiperPagination);
+  maxWidthContainer.append(paginationCell);
 
-  // Swiper Container
-  const swiperCell = document.createElement('div');
-  swiperCell.classList.add('cell', 'small-12');
-  maxWidthContainer.append(swiperCell);
-
+  const swiperWrapperCell = document.createElement('div');
+  swiperWrapperCell.classList.add('cell', 'small-12');
   const swiper = document.createElement('div');
-  swiper.classList.add(
-    'swiper',
-    'coffee-profiler-swiper',
-    'swiper-initialized',
-    'swiper-horizontal',
-    'swiper-backface-hidden',
-  );
-  swiperCell.append(swiper);
-
+  swiper.classList.add('swiper', 'coffee-profiler-swiper', 'swiper-initialized', 'swiper-horizontal', 'swiper-backface-hidden');
   const swiperWrapper = document.createElement('div');
   swiperWrapper.classList.add('swiper-wrapper');
-  swiper.append(swiperWrapper);
+  swiperWrapper.setAttribute('aria-live', 'polite');
 
-  // Process slides and options
-  const slides = [];
-  const options = [];
-
-  // Separate slides and options based on content detection
-  itemRows.forEach((row) => {
-    const cells = [...row.children];
-    if (cells.length === 2 && cells[0].textContent.trim() && cells[1].textContent.trim()) {
-      // This is a coffee-profiler-slide item (question and options container placeholder)
-      slides.push(row);
-    } else if (cells.length === 2 && cells[0].querySelector('picture') && cells[1].textContent.trim()) {
-      // This is a slide-option item (icon and label)
-      options.push(row);
-    }
-  });
-
-  slides.forEach((slideRow, index) => {
-    const [questionCell] = [...slideRow.children]; // Only question cell is directly used from slideRow
-
+  slides.forEach((slide, index) => {
     const swiperSlide = document.createElement('div');
     swiperSlide.classList.add('swiper-slide');
     if (index === 0) {
@@ -199,143 +174,102 @@ export default function decorate(block) {
     } else if (index === 1) {
       swiperSlide.classList.add('swiper-slide-next');
     }
+    if (index === slides.length - 1) {
+      swiperSlide.classList.add('last-slide');
+    }
     swiperSlide.setAttribute('data-slide-index', index);
     swiperSlide.setAttribute('aria-label', `${index + 1} / ${slides.length}`);
-    moveInstrumentation(slideRow, swiperSlide);
-    swiperWrapper.append(swiperSlide);
 
     const slideTypeNo = document.createElement('div');
     slideTypeNo.classList.add('slide-type--no');
-    swiperSlide.append(slideTypeNo);
+    const coffeeProfilerSlideNo = document.createElement('div');
+    coffeeProfilerSlideNo.classList.add('coffee-profiler-slide', 'animate-enter-fade-up-short', 'animate-delay-7');
+    coffeeProfilerSlideNo.setAttribute('data-q-id', slide.questionId);
+    coffeeProfilerSlideNo.setAttribute('data-slide-index', index);
+    coffeeProfilerSlideNo.setAttribute('data-q-filter', slide.questionFilter);
 
-    const coffeeProfilerSlide = document.createElement('div');
-    coffeeProfilerSlide.classList.add(
-      'coffee-profiler-slide',
-      'animate-enter-fade-up-short',
-      'animate-delay-7',
-    );
-    slideTypeNo.append(coffeeProfilerSlide);
+    const questionLabelNo = document.createElement('h3');
+    questionLabelNo.classList.add('question-label');
+    questionLabelNo.textContent = slide.questionLabel;
+    coffeeProfilerSlideNo.append(questionLabelNo);
 
-    const questionLabel = document.createElement('h3');
-    questionLabel.classList.add('question-label');
-    questionLabel.textContent = questionCell.textContent.trim();
-    coffeeProfilerSlide.append(questionLabel);
+    const optionsContainerNo = document.createElement('div');
+    optionsContainerNo.classList.add('options-container', `options-count--${slide.options.length}`);
 
-    const optionsContainer = document.createElement('div');
-    optionsContainer.classList.add('options-container');
-    // The options-count--X class should reflect the actual number of options for *this* slide.
-    // Since options are currently global, we'll use the global count, but ideally this would be per slide.
-    optionsContainer.classList.add(`options-count--${options.length}`);
-    coffeeProfilerSlide.append(optionsContainer);
+    slide.options.forEach((option) => {
+      const button = document.createElement('button');
+      button.classList.add('option', 'elevation-2', 'has-hover', 'bg--paper-white');
+      button.setAttribute('data-opt-id', option.optionId);
+      button.setAttribute('data-q-id', option.questionId);
+      button.setAttribute('data-opt-filter-vals', option.optionFilterVals);
+      button.setAttribute('data-opt-filter', option.optionFilter);
+      button.setAttribute('data-opt-exc-filter', option.optionExcFilter);
+      button.setAttribute('aria-label', option.optionAriaLabel);
+      button.setAttribute('role', 'radio');
+      button.setAttribute('aria-checked', 'false');
 
-    options.forEach((optionRow) => {
-      const [iconCell, labelCell] = [...optionRow.children];
-
-      const optionButton = document.createElement('button');
-      optionButton.classList.add(
-        'option',
-        'elevation-2',
-        'has-hover',
-        'bg--paper-white',
-      );
-      optionButton.setAttribute('role', 'radio');
-      optionButton.setAttribute('aria-checked', 'false');
-      optionButton.setAttribute('disabled', 'disabled'); // Default state as per original HTML
-      moveInstrumentation(optionRow, optionButton);
-      optionsContainer.append(optionButton);
-
-      const optionIconPicture = iconCell.querySelector('picture');
-      if (optionIconPicture) {
-        const optionIconImg = optionIconPicture.querySelector('img');
+      if (option.optionIcon) {
+        const optionIconImg = option.optionIcon.querySelector('img');
         if (optionIconImg) {
-          const optimizedPic = createOptimizedPicture(
-            optionIconImg.src,
-            optionIconImg.alt,
-            false,
-            [{ width: '750' }],
-          );
-          const newImg = optimizedPic.querySelector('img');
-          newImg.classList.add('option-icon', 'lazyload');
-          optionButton.append(optimizedPic);
-          moveInstrumentation(optionIconImg, newImg);
+          optionIconImg.classList.add('option-icon', 'lazyloaded');
+          button.append(optionIconImg);
         }
       }
 
-      const optionLabel = document.createElement('span');
-      optionLabel.classList.add('option-label', 'labelMediumRegular');
-      optionLabel.textContent = labelCell.textContent.trim();
-      optionButton.append(optionLabel);
-
-      // Add event listener for option buttons
-      optionButton.addEventListener('click', () => {
-        // Deselect all other options in this container
-        optionsContainer.querySelectorAll('.option').forEach((btn) => {
-          btn.setAttribute('aria-checked', 'false');
-          btn.classList.remove('selected'); // Assuming a 'selected' class for styling
-        });
-        // Select this option
-        optionButton.setAttribute('aria-checked', 'true');
-        optionButton.classList.add('selected');
-        // Enable next button if an option is selected
-        nextButton.removeAttribute('disabled');
-        nextButton.setAttribute('aria-disabled', 'false');
-      });
+      const optionLabelSpan = document.createElement('span');
+      optionLabelSpan.classList.add('option-label', 'labelMediumRegular');
+      optionLabelSpan.textContent = option.optionLabel;
+      button.append(optionLabelSpan);
+      optionsContainerNo.append(button);
     });
+    coffeeProfilerSlideNo.append(optionsContainerNo);
+    slideTypeNo.append(coffeeProfilerSlideNo);
+    swiperSlide.append(slideTypeNo);
 
-    const gridContainer = document.createElement('div');
-    gridContainer.classList.add('grid-container');
-    swiperSlide.append(gridContainer);
+    // Add slide-type--yes div as per original HTML, initially hidden
+    const slideTypeYes = document.createElement('div');
+    slideTypeYes.classList.add('slide-type--yes', 'hide');
+    // For simplicity, we are duplicating the slide content for 'yes' type for now.
+    // In a real scenario, this would likely involve different content based on the model.
+    const coffeeProfilerSlideYes = coffeeProfilerSlideNo.cloneNode(true); // Clone for now
+    slideTypeYes.append(coffeeProfilerSlideYes);
+    swiperSlide.append(slideTypeYes);
 
-    const gridX = document.createElement('div');
-    gridX.classList.add('grid-x');
-    gridContainer.append(gridX);
+    swiperWrapper.append(swiperSlide);
   });
 
-  // Swiper Controls
+  swiper.append(swiperWrapper);
+
   const swiperControls = document.createElement('div');
   swiperControls.classList.add('swiper-controls', 'animate-enter-fade', 'animate-delay-15');
-  swiper.append(swiperControls);
 
   const prevButton = document.createElement('button');
-  prevButton.classList.add(
-    'swiper-control',
-    'swiper-button',
-    'swiper-control--prev',
-    'elevation-1',
-    'animate-enter-fade-right-short',
-    'animate-delay-15',
-    'swiper-button-disabled',
-  );
+  prevButton.classList.add('swiper-control', 'swiper-button', 'swiper-control--prev', 'elevation-1', 'animate-enter-fade-right-short', 'animate-delay-15', 'swiper-button-disabled');
   prevButton.setAttribute('disabled', '');
   prevButton.setAttribute('tabindex', '-1');
   prevButton.setAttribute('aria-label', 'Previous slide');
+  prevButton.setAttribute('aria-controls', 'swiper-wrapper-ca5cea13d5f9a0d3'); // Placeholder ID
   prevButton.setAttribute('aria-disabled', 'true');
+  const prevImg = document.createElement('img');
+  prevImg.alt = 'svg file';
+  prevImg.src = '/content/dam/aemigrate/uploaded-folder/image/1777190876865.svg+xml'; // Placeholder src
+  prevButton.append(prevImg);
   swiperControls.append(prevButton);
 
-  const prevImg = document.createElement('img');
-  prevImg.src = '/content/dam/aemigrate/uploaded-folder/image/1777158291586.svg+xml';
-  prevImg.alt = 'svg file';
-  prevButton.append(prevImg);
-
   const nextButton = document.createElement('button');
-  nextButton.classList.add(
-    'swiper-control',
-    'swiper-button',
-    'swiper-control--next',
-    'elevation-1',
-    'animate-enter-fade-left-short',
-    'animate-delay-15',
-  );
+  nextButton.classList.add('swiper-control', 'swiper-button', 'swiper-control--next', 'elevation-1', 'animate-enter-fade-left-short', 'animate-delay-15');
   nextButton.setAttribute('tabindex', '0');
   nextButton.setAttribute('aria-label', 'Next slide');
+  nextButton.setAttribute('aria-controls', 'swiper-wrapper-ca5cea13d5f9a0d3'); // Placeholder ID
   nextButton.setAttribute('aria-disabled', 'false');
-  nextButton.setAttribute('disabled', 'disabled'); // Default state as per original HTML
+  nextButton.setAttribute('disabled', 'disabled'); // Initially disabled
+  const nextImg = document.createElement('img');
+  nextImg.alt = 'svg file';
+  nextImg.src = '/content/dam/aemigrate/uploaded-folder/image/1777190876910.svg+xml'; // Placeholder src
+  nextButton.append(nextImg);
   swiperControls.append(nextButton);
 
-  const nextImg = document.createElement('img');
-  nextImg.src = '/content/dam/aemigrate/uploaded-folder/image/1777158291645.svg+xml';
-  nextImg.alt = 'svg file';
-  nextButton.append(nextImg);
+  swiper.append(swiperControls);
 
   const swiperNotification = document.createElement('span');
   swiperNotification.classList.add('swiper-notification');
@@ -343,97 +277,166 @@ export default function decorate(block) {
   swiperNotification.setAttribute('aria-atomic', 'true');
   swiper.append(swiperNotification);
 
-  // Error Message
+  swiperWrapperCell.append(swiper);
+  maxWidthContainer.append(swiperWrapperCell);
+  section.append(maxWidthContainer);
+
   const errorMessageDiv = document.createElement('div');
   errorMessageDiv.classList.add('error-message');
-  errorMessageDiv.setAttribute('data-default-message', 'Error! Please try again.');
-  block.append(errorMessageDiv);
-
+  errorMessageDiv.setAttribute('data-default-message', errorMessage);
   const errorMessageText = document.createElement('span');
   errorMessageText.classList.add('error-message-text', 'bodyLargeRegular');
-  errorMessageText.textContent = errorMessageRow.textContent.trim();
-  moveInstrumentation(errorMessageRow, errorMessageText);
+  errorMessageText.textContent = errorMessage;
   errorMessageDiv.append(errorMessageText);
+  section.append(errorMessageDiv);
 
-  // Form
   const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = 'https://www.nescafe.com/in/coffee-profiler/result'; // Hardcoded as per original HTML
   form.classList.add('hide', 'coffee-profiler-form');
-  form.setAttribute('method', 'POST');
-  form.setAttribute('action', 'https://www.nescafe.com/in/coffee-profiler/result');
-  block.append(form);
 
-  const createHiddenInput = (name) => {
-    const input = document.createElement('input');
-    input.setAttribute('name', name);
-    input.setAttribute('value', '');
-    input.setAttribute('type', 'hidden');
-    return input;
-  };
+  const inputType = document.createElement('input');
+  inputType.name = 'type';
+  inputType.value = '';
+  inputType.type = 'hidden';
+  form.append(inputType);
 
-  form.append(createHiddenInput('type'));
-  form.append(createHiddenInput('intensity'));
-  form.append(createHiddenInput('format'));
-  form.append(createHiddenInput('features'));
-  form.append(createHiddenInput('exc-type'));
-  form.append(createHiddenInput('exc-intensity'));
-  form.append(createHiddenInput('exc-format'));
-  form.append(createHiddenInput('exc-features'));
+  const inputIntensity = document.createElement('input');
+  inputIntensity.name = 'intensity';
+  inputIntensity.value = '';
+  inputIntensity.type = 'hidden';
+  form.append(inputIntensity);
 
-  // Dummy elements to load background images
-  const dummyBgPaperBlue = document.createElement('div');
-  dummyBgPaperBlue.classList.add('bg--paper-blue', 'dummy-to-load-bg');
-  block.prepend(dummyBgPaperBlue);
+  const inputFormat = document.createElement('input');
+  inputFormat.name = 'format';
+  inputFormat.value = '';
+  inputFormat.type = 'hidden';
+  form.append(inputFormat);
 
-  const dummyBgPaperWhiteHeavy = document.createElement('div');
-  dummyBgPaperWhiteHeavy.classList.add('bg--paper-white-heavy', 'dummy-to-load-bg');
-  block.prepend(dummyBgPaperWhiteHeavy);
+  const inputFeatures = document.createElement('input');
+  inputFeatures.name = 'features';
+  inputFeatures.value = '';
+  inputFeatures.type = 'hidden';
+  form.append(inputFeatures);
 
-  // Swiper navigation logic (simplified for review, full Swiper integration would be more complex)
+  const inputExcType = document.createElement('input');
+  inputExcType.name = 'exc-type';
+  inputExcType.value = '';
+  inputExcType.type = 'hidden';
+  form.append(inputExcType);
+
+  const inputExcIntensity = document.createElement('input');
+  inputExcIntensity.name = 'exc-intensity';
+  inputExcIntensity.value = '';
+  inputExcIntensity.type = 'hidden';
+  form.append(inputExcIntensity);
+
+  const inputExcFormat = document.createElement('input');
+  inputExcFormat.name = 'exc-format';
+  inputExcFormat.value = '';
+  inputExcFormat.type = 'hidden';
+  form.append(inputExcFormat);
+
+  const inputExcFeatures = document.createElement('input');
+  inputExcFeatures.name = 'exc-features';
+  inputExcFeatures.value = '';
+  inputExcFeatures.type = 'hidden';
+  form.append(inputExcFeatures);
+
+  section.append(form);
+
+  block.append(section);
+
+  // Swiper initialization (simplified for EDS)
   let currentSlideIndex = 0;
+  const allSlides = swiperWrapper.querySelectorAll('.swiper-slide');
 
-  const updateSwiperControls = () => {
+  const updateSwiper = () => {
+    allSlides.forEach((slide, idx) => {
+      slide.classList.remove('swiper-slide-active', 'swiper-slide-next');
+      if (idx === currentSlideIndex) {
+        slide.classList.add('swiper-slide-active');
+      } else if (idx === currentSlideIndex + 1) {
+        slide.classList.add('swiper-slide-next');
+      }
+      slide.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+    });
+
+    prevButton.classList.toggle('swiper-button-disabled', currentSlideIndex === 0);
     prevButton.disabled = currentSlideIndex === 0;
     prevButton.setAttribute('aria-disabled', currentSlideIndex === 0);
-    prevButton.classList.toggle('swiper-button-disabled', currentSlideIndex === 0);
 
-    nextButton.disabled = currentSlideIndex === slides.length - 1;
-    nextButton.setAttribute('aria-disabled', currentSlideIndex === slides.length - 1);
-    nextButton.classList.toggle('swiper-button-disabled', currentSlideIndex === slides.length - 1);
+    nextButton.classList.toggle('swiper-button-disabled', currentSlideIndex === allSlides.length - 1);
+    nextButton.disabled = currentSlideIndex === allSlides.length - 1;
+    nextButton.setAttribute('aria-disabled', currentSlideIndex === allSlides.length - 1);
 
-    // Disable next button if no option is selected on the current slide
-    const currentSlideElement = swiperWrapper.querySelector(`[data-slide-index="${currentSlideIndex}"]`);
-    const selectedOption = currentSlideElement?.querySelector('.option[aria-checked="true"]');
-    if (!selectedOption && currentSlideIndex < slides.length - 1) {
-      nextButton.disabled = true;
-      nextButton.setAttribute('aria-disabled', 'true');
-      nextButton.classList.add('swiper-button-disabled');
-    }
-  };
-
-  const goToSlide = (index) => {
-    if (index >= 0 && index < slides.length) {
-      currentSlideIndex = index;
-      swiperWrapper.style.transform = `translate3d(-${currentSlideIndex * 100}%, 0px, 0px)`; // Simplified transform
-      swiperWrapper.querySelectorAll('.swiper-slide').forEach((slide, i) => {
-        slide.classList.remove('swiper-slide-active', 'swiper-slide-next');
-        if (i === currentSlideIndex) {
-          slide.classList.add('swiper-slide-active');
-        } else if (i === currentSlideIndex + 1) {
-          slide.classList.add('swiper-slide-next');
-        }
-      });
-      updateSwiperControls();
-    }
+    const progress = (currentSlideIndex + 1) / allSlides.length;
+    swiperPaginationFill.style.transform = `translate3d(0px, 0px, 0px) scaleX(${progress}) scaleY(1)`;
   };
 
   prevButton.addEventListener('click', () => {
-    goToSlide(currentSlideIndex - 1);
+    if (currentSlideIndex > 0) {
+      currentSlideIndex--;
+      updateSwiper();
+    }
   });
 
   nextButton.addEventListener('click', () => {
-    goToSlide(currentSlideIndex + 1);
+    if (currentSlideIndex < allSlides.length - 1) {
+      currentSlideIndex++;
+      updateSwiper();
+    }
   });
 
-  // Initialize controls state
-  updateSwiperControls();
+  // Initial update
+  updateSwiper();
+
+  // Handle option selection
+  block.querySelectorAll('.option').forEach((optionButton) => {
+    optionButton.addEventListener('click', () => {
+      // Remove 'aria-checked' from all options for the current question
+      const currentQuestionId = optionButton.getAttribute('data-q-id');
+      block.querySelectorAll(`button[data-q-id="${currentQuestionId}"]`).forEach((btn) => {
+        btn.setAttribute('aria-checked', 'false');
+      });
+
+      // Set 'aria-checked' for the selected option
+      optionButton.setAttribute('aria-checked', 'true');
+
+      // Enable next button if an option is selected for the current slide
+      const currentSlideOptions = allSlides[currentSlideIndex].querySelectorAll('.option');
+      const anyOptionSelected = Array.from(currentSlideOptions).some(
+        (btn) => btn.getAttribute('aria-checked') === 'true',
+      );
+      if (anyOptionSelected) {
+        nextButton.disabled = false;
+        nextButton.classList.remove('swiper-button-disabled');
+        nextButton.setAttribute('aria-disabled', 'false');
+      } else {
+        nextButton.disabled = true;
+        nextButton.classList.add('swiper-button-disabled');
+        nextButton.setAttribute('aria-disabled', 'true');
+      }
+    });
+  });
+
+  // Example of greeting logic (based on current time)
+  const updateGreeting = () => {
+    const now = new Date();
+    const hour = now.getHours();
+
+    block.querySelectorAll('.greetings-container span').forEach((span) => span.classList.add('hide'));
+
+    if (hour >= 5 && hour < 12) {
+      greetingMorningSpan.classList.remove('hide');
+    } else if (hour >= 12 && hour < 17) {
+      greetingAfternoonSpan.classList.remove('hide');
+    } else if (hour >= 17 && hour < 21) {
+      greetingEveningSpan.classList.remove('hide');
+    } else {
+      greetingNightSpan.classList.remove('hide');
+    }
+  };
+
+  updateGreeting();
 }

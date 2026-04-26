@@ -1,7 +1,7 @@
 {
   "definitions": [
     {
-      "title": "Back To Top",
+      "title": "Back-To-Top",
       "id": "back-to-top",
       "plugins": {
         "xwalk": {
@@ -10,7 +10,7 @@
             "template": {
               "filter": "back-to-top",
               "model": "back-to-top",
-              "name": "Back To Top"
+              "name": "Back-To-Top"
             }
           }
         }
@@ -22,15 +22,15 @@
       "id": "back-to-top",
       "fields": [
         {
-          "component": "aem-content",
-          "label": "Back To Top Link",
-          "name": "link",
+          "component": "text",
+          "label": "Button Label",
+          "name": "buttonLabel",
           "valueType": "string"
         },
         {
-          "component": "text",
-          "label": "Button Label",
-          "name": "label",
+          "component": "aem-content",
+          "label": "Button Link",
+          "name": "buttonLink",
           "valueType": "string"
         }
       ]
