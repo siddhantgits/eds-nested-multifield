@@ -15,7 +15,17 @@
       "hero",
       "cards",
       "columns",
-      "fragment"
+      "fragment",
+      "main-header",
+      "spotlight-home",
+      "what-we-do-wrap",
+      "purpose-led-grid",
+      "performace-driven-cards",
+      "spirit-of-rise",
+      "latest-stories",
+      "work-with-us",
+      "faqs-section",
+      "footer-main"
     ]
   },
   {
@@ -37,6 +47,74 @@
       "image",
       "button",
       "title"
+    ]
+  },
+  {
+    "id": "faqs-section",
+    "components": [
+      "faq-item"
+    ]
+  },
+  {
+    "id": "footer-main",
+    "components": [
+      "social-link-item",
+      "footer-menu-block",
+      "footer-menu-item",
+      "footer-secondary-nav-item"
+    ]
+  },
+  {
+    "id": "latest-stories",
+    "components": [
+      "twitter-feed-item",
+      "story-item"
+    ]
+  },
+  {
+    "id": "main-header",
+    "components": [
+      "navigation-item",
+      "press-release-item",
+      "contact-link-item",
+      "search-icon-item"
+    ]
+  },
+  {
+    "id": "performace-driven-cards",
+    "components": [
+      "performace-driven-card-item"
+    ]
+  },
+  {
+    "id": "purpose-led-grid",
+    "components": [
+      "purpose-led-card"
+    ]
+  },
+  {
+    "id": "spirit-of-rise",
+    "components": [
+      "spirit-of-rise-card"
+    ]
+  },
+  {
+    "id": "spotlight-home",
+    "components": [
+      "spotlight-slide-item",
+      "quick-link-item"
+    ]
+  },
+  {
+    "id": "what-we-do-wrap",
+    "components": [
+      "business-vertical-item"
+    ]
+  },
+  {
+    "id": "work-with-us",
+    "components": [
+      "work-with-us-slide"
     ]
   }
 ]

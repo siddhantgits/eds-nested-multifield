@@ -1,0 +1,79 @@
+{
+  "definitions": [
+    {
+      "title": "Faqs-Section",
+      "id": "faqs-section",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "filter": "faqs-section",
+              "model": "faqs-section",
+              "name": "Faqs-Section"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Faq-Item",
+      "id": "faq-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "faq-item",
+              "name": "Faq-Item"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "faqs-section",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Section Heading",
+          "name": "heading",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "faq-item",
+          "label": "FAQs",
+          "name": "faqs"
+        }
+      ]
+    },
+    {
+      "id": "faq-item",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Question",
+          "name": "question",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "label": "Answer",
+          "name": "answer",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "faqs-section",
+      "components": [
+        "faq-item"
+      ]
+    }
+  ]
+}

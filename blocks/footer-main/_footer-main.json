@@ -1,0 +1,220 @@
+{
+  "definitions": [
+    {
+      "title": "Footer-Main",
+      "id": "footer-main",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "filter": "footer-main",
+              "model": "footer-main",
+              "name": "Footer-Main"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Social-Link-Item",
+      "id": "social-link-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "social-link-item",
+              "name": "Social-Link-Item"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Footer-Menu-Block",
+      "id": "footer-menu-block",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "footer-menu-block",
+              "name": "Footer-Menu-Block"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Footer-Menu-Item",
+      "id": "footer-menu-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "footer-menu-item",
+              "name": "Footer-Menu-Item"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Footer-Secondary-Nav-Item",
+      "id": "footer-secondary-nav-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "footer-secondary-nav-item",
+              "name": "Footer-Secondary-Nav-Item"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "footer-main",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Logo",
+          "name": "logo",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Logo Link",
+          "name": "logoLink",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "social-link-item",
+          "label": "Social Links",
+          "name": "socialLinks"
+        },
+        {
+          "component": "container",
+          "item": "footer-menu-block",
+          "label": "Footer Menu Blocks",
+          "name": "footerMenuBlocks"
+        },
+        {
+          "component": "container",
+          "item": "footer-secondary-nav-item",
+          "label": "Secondary Navigation",
+          "name": "secondaryNav"
+        },
+        {
+          "component": "richtext",
+          "label": "Copyright Text",
+          "name": "copyrightText",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "social-link-item",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Social Icon",
+          "name": "icon",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Social Link",
+          "name": "link",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "label": "Navigation Hierarchy",
+          "name": "hierarchy-tree",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "footer-menu-block",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Menu Block Title",
+          "name": "blockTitle",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Menu Block Title Link",
+          "name": "blockTitleLink",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "footer-menu-item",
+          "label": "Menu Items",
+          "name": "menuItems"
+        }
+      ]
+    },
+    {
+      "id": "footer-menu-item",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Menu Item Label",
+          "name": "label",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Menu Item Link",
+          "name": "link",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "label": "Navigation Hierarchy",
+          "name": "hierarchy-tree",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "footer-secondary-nav-item",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Secondary Nav Label",
+          "name": "label",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Secondary Nav Link",
+          "name": "link",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "footer-main",
+      "components": [
+        "social-link-item",
+        "footer-menu-block",
+        "footer-menu-item",
+        "footer-secondary-nav-item"
+      ]
+    }
+  ]
+}
