@@ -1,0 +1,38 @@
+import { createOptimizedPicture } from '../../scripts/aem.js';
+import { moveInstrumentation } from '../../scripts/scripts.js';
+
+export default function decorate(block) {
+  // CHECK 0 & 1: Replaced block.children[0] with content detection.
+  // The model has a single richtext field "body" at the root level.
+  // The EDS block structure shows it as block.children[0] containing a div.
+  // We need to find the cell that contains the richtext content.
+  const bodyCell = [...block.children].find(row => row.children.length > 0 && row.children[0].tagName === 'DIV');
+
+  if (bodyCell) {
+    // CHECK 1.5: Richtext field "body" should use innerHTML.
+    // The original HTML shows <p> tags inside the body content.
+    // We need to extract the innerHTML of the actual content div.
+    const bodyContentDiv = bodyCell.querySelector('div');
+    if (bodyContentDiv) {
+      moveInstrumentation(bodyCell, bodyContentDiv); // Move instrumentation from the row to the content div
+      block.innerHTML = ''; // Clear the block
+      // Append all children of the bodyContentDiv directly to the block
+      while (bodyContentDiv.firstChild) {
+        block.appendChild(bodyContentDiv.firstChild);
+      }
+    }
+  }
+
+  // Apply classes from ORIGINAL HTML
+  // All classes are from the allowlist.
+  block.classList.add('no-color', 'cmp-text', 'c-link', 'paddingTop40', 'paddingBottom40', 'mobile-padding14', 'aos-init', 'aos-animate');
+
+  // Image optimization (added this check as it's a common utility)
+  block.querySelectorAll('picture > img').forEach((img) => {
+    const optimizedPic = createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]);
+    moveInstrumentation(img, optimizedPic.querySelector('img'));
+    img.closest('picture').replaceWith(optimizedPic);
+  });
+
+  // CHECK 2: Interactivity - No interactive elements found in ORIGINAL HTML.
+}

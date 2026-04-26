@@ -1,0 +1,223 @@
+{
+  "definitions": [
+    {
+      "title": "Footer-Comp",
+      "id": "footer-comp",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "filter": "footer-comp",
+              "model": "footer-comp",
+              "name": "Footer-Comp"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Footer-Nav-Item",
+      "id": "footer-nav-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "footer-nav-item",
+              "name": "Footer-Nav-Item"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Footer-Quick-Link-Item",
+      "id": "footer-quick-link-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "footer-quick-link-item",
+              "name": "Footer-Quick-Link-Item"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Footer-Social-Link-Item",
+      "id": "footer-social-link-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "footer-social-link-item",
+              "name": "Footer-Social-Link-Item"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "footer-comp",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Go Top Icon",
+          "name": "goTopIcon",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "label": "Footer Logo",
+          "name": "footerLogo",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Footer Logo Link",
+          "name": "footerLogoLink",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "footer-nav-item",
+          "label": "Footer Primary Navigation",
+          "name": "footerNav"
+        },
+        {
+          "component": "text",
+          "label": "Tata Cars Section Title",
+          "name": "tataCarsTitle",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "footer-quick-link-item",
+          "label": "Tata Cars Links",
+          "name": "tataCarsLinks"
+        },
+        {
+          "component": "text",
+          "label": "Help Section Title",
+          "name": "helpTitle",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "footer-quick-link-item",
+          "label": "Help Links",
+          "name": "helpLinks"
+        },
+        {
+          "component": "text",
+          "label": "Quick Links Section Title",
+          "name": "quickLinksTitle",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "footer-quick-link-item",
+          "label": "Quick Links",
+          "name": "quickLinks"
+        },
+        {
+          "component": "text",
+          "label": "Social Section Title",
+          "name": "socialTitle",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "footer-social-link-item",
+          "label": "Social Links",
+          "name": "socialLinks"
+        },
+        {
+          "component": "richtext",
+          "label": "Copyright Text",
+          "name": "copyrightText",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "footer-nav-item",
+      "fields": [
+        {
+          "component": "aem-content",
+          "label": "Nav Link",
+          "name": "link",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Nav Label",
+          "name": "label",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "label": "Navigation Hierarchy",
+          "name": "hierarchy-tree",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "footer-quick-link-item",
+      "fields": [
+        {
+          "component": "aem-content",
+          "label": "Quick Link",
+          "name": "link",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Quick Link Label",
+          "name": "label",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "footer-social-link-item",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Social Icon",
+          "name": "icon",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Social Link",
+          "name": "link",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Social Platform Name",
+          "name": "label",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "footer-comp",
+      "components": [
+        "footer-nav-item",
+        "footer-quick-link-item",
+        "footer-social-link-item"
+      ]
+    }
+  ]
+}

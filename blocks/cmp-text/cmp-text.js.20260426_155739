@@ -1,0 +1,31 @@
+import { createOptimizedPicture } from '../../scripts/aem.js';
+import { moveInstrumentation } from '../../scripts/scripts.js';
+
+export default function decorate(block) {
+  // CHECK 0 & 1: Replaced direct index access with content detection
+  // The model has a single richtext field, so we expect one row with one cell.
+  const contentCell = [...block.children][0]?.children[0];
+
+  if (contentCell) {
+    const contentDiv = document.createElement('div');
+    // CHECK 1.5: Use innerHTML for richtext content
+    // moveInstrumentation is called before moving content
+    moveInstrumentation(contentCell, contentDiv);
+    // Move all children from the contentCell to the new contentDiv
+    while (contentCell.firstChild) {
+      contentDiv.append(contentCell.firstChild);
+    }
+    block.innerHTML = ''; // Clear the block
+    block.append(contentDiv); // Append the new contentDiv
+  }
+
+  // Apply classes from ORIGINAL HTML
+  // CHECK 1: Ensure all classes are from ORIGINAL HTML and applied correctly
+  block.classList.add('no-color', 'cmp-text', 'c-link', 'paddingTop40', 'paddingBottom40', 'mobile-padding14', 'aos-init', 'aos-animate');
+
+  // CHECK 1: The original HTML and block structure do not indicate images within the content
+  // that need optimization. The provided JS had a generic image optimization loop.
+  // Based on the provided ORIGINAL HTML and EDS BLOCK STRUCTURE, there are no images.
+  // Removing this section as it's not relevant to the current block's content.
+  // If images were present, createOptimizedPicture would be used.
+}

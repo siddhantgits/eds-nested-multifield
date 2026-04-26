@@ -1,0 +1,79 @@
+{
+  "definitions": [
+    {
+      "title": "Link-List",
+      "id": "link-list",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "filter": "link-list",
+              "model": "link-list",
+              "name": "Link-List"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Link-Image-Item",
+      "id": "link-image-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "link-image-item",
+              "name": "Link-Image-Item"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "link-list",
+      "fields": [
+        {
+          "component": "container",
+          "item": "link-image-item",
+          "label": "Links",
+          "name": "links"
+        }
+      ]
+    },
+    {
+      "id": "link-image-item",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Image",
+          "name": "image",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Link Label",
+          "name": "label",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Link URL",
+          "name": "link",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "link-list",
+      "components": [
+        "link-image-item"
+      ]
+    }
+  ]
+}

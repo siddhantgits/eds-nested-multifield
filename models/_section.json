@@ -66,7 +66,21 @@
         "back-to-top",
         "global-footer",
         "cookie-btn",
-        "footer-section"
+        "footer-section",
+        "header-comp",
+        "session-management-comp",
+        "carousel-comp",
+        "cmp-text",
+        "tml-title",
+        "rails",
+        "divider",
+        "link-list",
+        "tml-text",
+        "video",
+        "ttil",
+        "hero-banner",
+        "cta-popup-modal",
+        "footer-comp"
       ]
     }
   ]

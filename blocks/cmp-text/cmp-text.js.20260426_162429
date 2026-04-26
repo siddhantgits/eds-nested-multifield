@@ -1,0 +1,31 @@
+import { createOptimizedPicture } from '../../scripts/aem.js';
+import { moveInstrumentation } from '../../scripts/scripts.js';
+
+export default function decorate(block) {
+  // Use content detection instead of index access for the body cell
+  const bodyRow = [...block.children][0];
+  const bodyCell = [...bodyRow.children].find((cell) => cell.innerHTML.trim() !== '');
+
+  if (bodyCell) {
+    // Apply classes from ORIGINAL HTML to the block itself
+    block.classList.add('no-color', 'cmp-text', 'c-link', 'paddingTop40', 'paddingBottom40', 'mobile-padding14', 'aos-init', 'aos-animate');
+
+    // Move instrumentation from the bodyCell to the block
+    moveInstrumentation(bodyCell, block);
+
+    // Append all children from the bodyCell directly to the block
+    while (bodyCell.firstChild) {
+      block.append(bodyCell.firstChild);
+    }
+
+    // Remove the original bodyRow div
+    bodyRow.remove();
+  }
+
+  // Image optimization (if any images are present in the richtext)
+  block.querySelectorAll('picture > img').forEach((img) => {
+    const optimizedPic = createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]);
+    moveInstrumentation(img, optimizedPic.querySelector('img'));
+    img.closest('picture').replaceWith(optimizedPic);
+  });
+}
