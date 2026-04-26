@@ -15,13 +15,54 @@
       "hero",
       "cards",
       "columns",
-      "fragment"
+      "fragment",
+      "search-autocomplete",
+      "main-navigation",
+      "burger-navigation",
+      "toaster-signin",
+      "tooltip-signin-register",
+      "homepage-banner",
+      "home-page-description",
+      "sustainability-hub-recycle-section",
+      "recipe-home",
+      "sustainability-article-carousel",
+      "campaign-carousel",
+      "coffee-profiler",
+      "back-to-top",
+      "global-footer"
+    ]
+  },
+  {
+    "id": "back-to-top"
+  },
+  {
+    "id": "burger-navigation",
+    "components": [
+      "nav-level2-item",
+      "multiple-links-item",
+      "nav-level3-link-item",
+      "banner"
+    ]
+  },
+  {
+    "id": "campaign-carousel",
+    "components": [
+      "quotation-slide",
+      "recipe-card-slide",
+      "fact-card-slide"
     ]
   },
   {
     "id": "cards",
     "components": [
       "card"
+    ]
+  },
+  {
+    "id": "coffee-profiler",
+    "components": [
+      "profiler-question",
+      "profiler-option"
     ]
   },
   {
@@ -37,6 +78,68 @@
       "image",
       "button",
       "title"
+    ]
+  },
+  {
+    "id": "global-footer",
+    "components": [
+      "footer-social-link",
+      "footer-navigation-link"
+    ]
+  },
+  {
+    "id": "home-page-description",
+    "components": [
+      "cta-link"
+    ]
+  },
+  {
+    "id": "homepage-banner",
+    "components": [
+      "greeting-item"
+    ]
+  },
+  {
+    "id": "main-navigation",
+    "components": [
+      "nav-section",
+      "nav-item-level2",
+      "nav-item-level3",
+      "nav-level2-banner",
+      "nav-level3-banner"
+    ]
+  },
+  {
+    "id": "recipe-home",
+    "components": [
+      "recipe-card-item"
+    ]
+  },
+  {
+    "id": "search-autocomplete",
+    "components": [
+      "search-trending-item"
+    ]
+  },
+  {
+    "id": "sustainability-article-carousel",
+    "components": [
+      "sustainability-article-carousel-item"
+    ]
+  },
+  {
+    "id": "sustainability-hub-recycle-section",
+    "components": [
+      "see-all-products-button"
+    ]
+  },
+  {
+    "id": "toaster-signin"
+  },
+  {
+    "id": "tooltip-signin-register",
+    "components": [
+      "cta-item"
     ]
   }
 ]

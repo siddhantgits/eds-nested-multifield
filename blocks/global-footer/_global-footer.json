@@ -1,0 +1,172 @@
+{
+  "definitions": [
+    {
+      "title": "Global-Footer",
+      "id": "global-footer",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "filter": "global-footer",
+              "model": "global-footer",
+              "name": "Global-Footer"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Footer-Social-Link",
+      "id": "footer-social-link",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "footer-social-link",
+              "name": "Footer-Social-Link"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Footer-Navigation-Link",
+      "id": "footer-navigation-link",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "footer-navigation-link",
+              "name": "Footer-Navigation-Link"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "global-footer",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Footer Logo",
+          "name": "logo",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Footer Logo Link",
+          "name": "logoLink",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "label": "Country Selector Icon",
+          "name": "countrySelectorIcon",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Country Selector Link",
+          "name": "countrySelectorLink",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Country Selector Label",
+          "name": "countrySelectorLabel",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Social Section Title",
+          "name": "socialTitle",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "footer-social-link",
+          "label": "Footer Social Links",
+          "name": "socialLinks"
+        },
+        {
+          "component": "container",
+          "item": "footer-navigation-link",
+          "label": "Footer Navigation Links",
+          "name": "footerLinks"
+        },
+        {
+          "component": "aem-content",
+          "label": "Legal Link",
+          "name": "legalLink",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Legal Link Label",
+          "name": "legalLinkLabel",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "footer-social-link",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Social Icon",
+          "name": "icon",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Social Link",
+          "name": "link",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Social Name",
+          "name": "label",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "label": "Navigation Hierarchy",
+          "name": "hierarchy-tree",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "footer-navigation-link",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Link Label",
+          "name": "label",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Link URL",
+          "name": "link",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "global-footer",
+      "components": [
+        "footer-social-link",
+        "footer-navigation-link"
+      ]
+    }
+  ]
+}

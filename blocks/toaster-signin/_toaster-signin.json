@@ -1,0 +1,68 @@
+{
+  "definitions": [
+    {
+      "title": "Toaster-Signin",
+      "id": "toaster-signin",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "filter": "toaster-signin",
+              "model": "toaster-signin",
+              "name": "Toaster-Signin"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "toaster-signin",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Main Icon",
+          "name": "mainIcon",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "label": "User Icon",
+          "name": "userIcon",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Timer",
+          "name": "timer",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Sign In Message",
+          "name": "signinMsg",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Sign Out Message",
+          "name": "signoutMsg",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "User Message",
+          "name": "userMessage",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "toaster-signin"
+    }
+  ]
+}

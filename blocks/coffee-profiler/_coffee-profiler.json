@@ -1,0 +1,196 @@
+{
+  "definitions": [
+    {
+      "title": "Coffee-Profiler",
+      "id": "coffee-profiler",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "filter": "coffee-profiler",
+              "model": "coffee-profiler",
+              "name": "Coffee-Profiler"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Profiler-Question",
+      "id": "profiler-question",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "profiler-question",
+              "name": "Profiler-Question"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Profiler-Option",
+      "id": "profiler-option",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "profiler-option",
+              "name": "Profiler-Option"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "coffee-profiler",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Parallax Background Image",
+          "name": "backgroundImage",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Heading",
+          "name": "heading",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Greeting (Evening)",
+          "name": "greeting-evening",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Greeting (Morning)",
+          "name": "greeting-morning",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Greeting (Afternoon)",
+          "name": "greeting-afternoon",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Greeting (Night)",
+          "name": "greeting-night",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Guide Text",
+          "name": "guide-text",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Error Message",
+          "name": "error-message",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "profiler-question",
+          "label": "Questions",
+          "name": "questions"
+        }
+      ]
+    },
+    {
+      "id": "profiler-question",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Question ID",
+          "name": "question-id",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Slide Type",
+          "name": "slide-type",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Question Label",
+          "name": "question-label",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "profiler-option",
+          "label": "Options",
+          "name": "options"
+        }
+      ]
+    },
+    {
+      "id": "profiler-option",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Option ID",
+          "name": "option-id",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Is Yes",
+          "name": "is-yes",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "label": "Option Icon",
+          "name": "option-icon",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Option Label",
+          "name": "option-label",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Option Filter Values",
+          "name": "opt-filter-vals",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Option Filter",
+          "name": "opt-filter",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Option Exclude Filter",
+          "name": "opt-exc-filter",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "coffee-profiler",
+      "components": [
+        "profiler-question",
+        "profiler-option"
+      ]
+    }
+  ]
+}

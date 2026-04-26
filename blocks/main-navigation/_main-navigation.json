@@ -1,0 +1,271 @@
+{
+  "definitions": [
+    {
+      "title": "Main Navigation",
+      "id": "main-navigation",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "filter": "main-navigation",
+              "model": "main-navigation",
+              "name": "Main Navigation"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Nav Section",
+      "id": "nav-section",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "nav-section",
+              "name": "Nav Section"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Nav Item Level 2",
+      "id": "nav-item-level2",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "nav-item-level2",
+              "name": "Nav Item Level 2"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Nav Item Level 3",
+      "id": "nav-item-level3",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "nav-item-level3",
+              "name": "Nav Item Level 3"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Nav Level 2 Banner",
+      "id": "nav-level2-banner",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "nav-level2-banner",
+              "name": "Nav Level 2 Banner"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Nav Level 3 Banner",
+      "id": "nav-level3-banner",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "nav-level3-banner",
+              "name": "Nav Level 3 Banner"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "main-navigation",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Logo Image",
+          "name": "logo",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Logo Link",
+          "name": "logo-link",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "nav-section",
+          "label": "Navigation Sections",
+          "name": "nav-sections"
+        }
+      ]
+    },
+    {
+      "id": "nav-section",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Section Label",
+          "name": "label",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Section ARIA Label",
+          "name": "aria-label",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "nav-item-level2",
+          "label": "Level 2 Items",
+          "name": "items-level2"
+        },
+        {
+          "component": "container",
+          "item": "nav-level2-banner",
+          "label": "Level 2 Banners",
+          "name": "level2-banners"
+        },
+        {
+          "component": "richtext",
+          "label": "Navigation Hierarchy",
+          "name": "hierarchy-tree",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "nav-item-level2",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Level 2 Label",
+          "name": "label",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Level 2 Link",
+          "name": "link",
+          "valueType": "string"
+        },
+        {
+          "component": "boolean",
+          "label": "Has Submenu",
+          "name": "has-submenu",
+          "valueType": "boolean"
+        },
+        {
+          "component": "container",
+          "item": "nav-item-level3",
+          "label": "Level 3 Items",
+          "name": "items-level3"
+        },
+        {
+          "component": "container",
+          "item": "nav-level3-banner",
+          "label": "Level 3 Banners",
+          "name": "level3-banners"
+        }
+      ]
+    },
+    {
+      "id": "nav-item-level3",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Icon",
+          "name": "icon",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Level 3 Label",
+          "name": "label",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Level 3 Link",
+          "name": "link",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "nav-level2-banner",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Banner Image",
+          "name": "banner-image",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Banner Alt Text",
+          "name": "banner-alt",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "label": "Banner Description",
+          "name": "banner-description",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "nav-level3-banner",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Banner Image",
+          "name": "banner-image",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Banner Alt Text",
+          "name": "banner-alt",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "label": "Banner Description",
+          "name": "banner-description",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "main-navigation",
+      "components": [
+        "nav-section",
+        "nav-item-level2",
+        "nav-item-level3",
+        "nav-level2-banner",
+        "nav-level3-banner"
+      ]
+    }
+  ]
+}
