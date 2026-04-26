@@ -1,0 +1,253 @@
+{
+  "definitions": [
+    {
+      "title": "Footer",
+      "id": "footer",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "filter": "footer",
+              "model": "footer",
+              "name": "Footer"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Navigation-Item",
+      "id": "navigation-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "navigation-item",
+              "name": "Navigation-Item"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Social-Media-Item",
+      "id": "social-media-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "social-media-item",
+              "name": "Social-Media-Item"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Title-Link-Item",
+      "id": "title-link-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "title-link-item",
+              "name": "Title-Link-Item"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "footer",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Main Logo",
+          "name": "mainLogo",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Main Logo Link",
+          "name": "mainLogoLink",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "label": "ITC Logo",
+          "name": "itcLogo",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "label": "FSSAI Logo",
+          "name": "fssaiLogo",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Subscribe API URL",
+          "name": "subscribeApiUrl",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Subscribe Success Message",
+          "name": "subscribeSuccessMsg",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Subscribe Failure Message",
+          "name": "subscribeFailureMsg",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Subscribe Title",
+          "name": "subscribeTitle",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "label": "Subscribe Logo",
+          "name": "subscribeLogo",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Subscribe Input Placeholder",
+          "name": "subscribeInputPlaceholder",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Subscribe Input Required Message",
+          "name": "subscribeInputRequiredMsg",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Subscribe Input Email Message",
+          "name": "subscribeInputEmailMsg",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Subscribe Consent Text",
+          "name": "subscribeConsentText",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Subscribe Consent Link",
+          "name": "subscribeConsentLink",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Subscribe Button Label",
+          "name": "subscribeButtonLabel",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "navigation-item",
+          "label": "Left Navigation",
+          "name": "leftNavigation"
+        },
+        {
+          "component": "container",
+          "item": "navigation-item",
+          "label": "Right Navigation",
+          "name": "rightNavigation"
+        },
+        {
+          "component": "container",
+          "item": "title-link-item",
+          "label": "Footer Title Links",
+          "name": "footerTitleLinks"
+        },
+        {
+          "component": "container",
+          "item": "social-media-item",
+          "label": "Social Media Links",
+          "name": "socialMedia"
+        }
+      ]
+    },
+    {
+      "id": "navigation-item",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Navigation Item Label",
+          "name": "label",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Navigation Item Link",
+          "name": "link",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "label": "Navigation Hierarchy",
+          "name": "hierarchy-tree",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "social-media-item",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Social Platform",
+          "name": "platform",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Social Link",
+          "name": "link",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "title-link-item",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Title Label",
+          "name": "label",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Title Link",
+          "name": "link",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "footer",
+      "components": [
+        "navigation-item",
+        "social-media-item",
+        "title-link-item"
+      ]
+    }
+  ]
+}

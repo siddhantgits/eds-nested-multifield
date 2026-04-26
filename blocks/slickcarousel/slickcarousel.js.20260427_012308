@@ -1,0 +1,253 @@
+import { createOptimizedPicture } from '../../scripts/aem.js';
+import { moveInstrumentation } from '../../scripts/scripts.js';
+
+export default function decorate(block) {
+  const carouselContainer = document.createElement('div');
+  carouselContainer.classList.add('cmp-carousel__container', 'slick-initialized', 'slick-slider', 'slick-dotted');
+  moveInstrumentation(block, carouselContainer);
+
+  const slickList = document.createElement('div');
+  slickList.classList.add('slick-list', 'draggable');
+
+  const slickTrack = document.createElement('div');
+  slickTrack.classList.add('slick-track');
+
+  const itemRows = [...block.children];
+
+  itemRows.forEach((row, index) => {
+    const [
+      logoCell,
+      titleCell,
+      subtitleCell,
+      desktopImageCell,
+      mobileImageCell,
+      buttonLinkCell,
+      buttonTextCell,
+    ] = [...row.children];
+
+    const carouselItem = document.createElement('div');
+    carouselItem.classList.add('cmp-carousel__item', 'slick-slide');
+    if (index === 0) {
+      carouselItem.classList.add('cmp-carousel__item--active', 'slick-current', 'slick-active');
+      carouselItem.setAttribute('aria-hidden', 'false');
+      carouselItem.setAttribute('tabindex', '0');
+    } else {
+      carouselItem.setAttribute('aria-hidden', 'true');
+      carouselItem.setAttribute('tabindex', '-1');
+    }
+    carouselItem.setAttribute('id', `slick-slide0${index}`);
+    carouselItem.setAttribute('role', 'tabpanel');
+    carouselItem.setAttribute('aria-roledescription', 'slide');
+    carouselItem.setAttribute('aria-label', `Slide ${index + 1} of ${itemRows.length}`);
+    carouselItem.setAttribute('data-slick-index', index);
+    moveInstrumentation(row, carouselItem);
+
+    const bannerDiv = document.createElement('div');
+    bannerDiv.classList.add('banner', 'cmp-banner--logo');
+
+    const cmpBannerDiv = document.createElement('div');
+    cmpBannerDiv.classList.add('cmp-banner');
+    cmpBannerDiv.setAttribute('data-component', 'banner');
+
+    const bannerContent = document.createElement('div');
+    bannerContent.classList.add('cmp-banner__content');
+
+    // Logo
+    const logoPicture = logoCell.querySelector('picture');
+    if (logoPicture) {
+      const itemLogoDiv = document.createElement('div');
+      itemLogoDiv.classList.add('cmp-banner__item-logo');
+      const img = logoPicture.querySelector('img');
+      if (img) {
+        const optimizedLogo = createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]);
+        moveInstrumentation(img, optimizedLogo.querySelector('img'));
+        itemLogoDiv.append(optimizedLogo);
+      }
+      bannerContent.append(itemLogoDiv);
+    }
+
+    // Title
+    const titleText = titleCell?.textContent.trim();
+    if (titleText) {
+      const titleH2 = document.createElement('h2');
+      titleH2.classList.add('cmp-banner__title');
+      titleH2.textContent = titleText;
+      bannerContent.append(titleH2);
+    }
+
+    // Subtitle
+    const subtitleText = subtitleCell?.textContent.trim();
+    if (subtitleText) {
+      const subtitleH3 = document.createElement('h3');
+      subtitleH3.classList.add('cmp-banner__sub-title');
+      subtitleH3.textContent = subtitleText;
+      bannerContent.append(subtitleH3);
+    }
+
+    // Images (desktop and mobile)
+    const desktopPicture = desktopImageCell.querySelector('picture');
+    const mobilePicture = mobileImageCell.querySelector('picture');
+
+    if (desktopPicture || mobilePicture) {
+      const picture = document.createElement('picture');
+      picture.classList.add('w-100', 'd-block');
+
+      if (mobilePicture) {
+        const mobileImg = mobilePicture.querySelector('img');
+        if (mobileImg) {
+          const source = document.createElement('source');
+          source.setAttribute('media', '(max-width: 600px)');
+          source.setAttribute('srcset', mobileImg.src);
+          picture.append(source);
+        }
+      }
+
+      if (desktopPicture) {
+        const desktopImg = desktopPicture.querySelector('img');
+        if (desktopImg) {
+          const img = document.createElement('img');
+          img.src = desktopImg.src;
+          img.alt = desktopImg.alt || '';
+          img.classList.add('cmp-banner__image', 'w-100', 'd-block');
+          picture.append(img);
+          moveInstrumentation(desktopImg, img); // Move instrumentation from original img to new img
+        }
+      }
+      bannerContent.append(picture);
+    }
+
+    // Button
+    const buttonLink = buttonLinkCell.querySelector('a');
+    const buttonText = buttonTextCell?.textContent.trim();
+    if (buttonLink && buttonText) {
+      const buttonDiv = document.createElement('div');
+      buttonDiv.classList.add('null', 'button', 'cmp-button--primary-anchor');
+
+      const anchor = document.createElement('a');
+      anchor.classList.add('cmp-button');
+      anchor.href = buttonLink.href;
+      anchor.setAttribute('tabindex', index === 0 ? '0' : '-1');
+
+      const span = document.createElement('span');
+      span.classList.add('cmp-button__text');
+      span.textContent = buttonText;
+      anchor.append(span);
+      buttonDiv.append(anchor);
+      bannerContent.append(buttonDiv);
+      moveInstrumentation(buttonLinkCell, anchor);
+    }
+
+    cmpBannerDiv.append(bannerContent);
+    bannerDiv.append(cmpBannerDiv);
+    carouselItem.append(bannerDiv);
+    slickTrack.append(carouselItem);
+  });
+
+  slickList.append(slickTrack);
+  carouselContainer.append(slickList);
+
+  // Arrows (Prev/Next)
+  const prevButton = document.createElement('button');
+  prevButton.classList.add('slick-prev', 'slick-arrow', 'slick-disabled');
+  prevButton.setAttribute('aria-label', 'Previous');
+  prevButton.setAttribute('type', 'button');
+  prevButton.setAttribute('aria-disabled', 'true');
+  prevButton.textContent = 'Previous';
+
+  const nextButton = document.createElement('button');
+  nextButton.classList.add('slick-next', 'slick-arrow');
+  nextButton.setAttribute('aria-label', 'Next');
+  nextButton.setAttribute('type', 'button');
+  nextButton.setAttribute('aria-disabled', 'false');
+  nextButton.textContent = 'Next';
+
+  carouselContainer.prepend(prevButton);
+  carouselContainer.append(nextButton);
+
+  // Dots
+  const slickDots = document.createElement('ul');
+  slickDots.classList.add('slick-dots');
+  slickDots.setAttribute('role', 'tablist');
+
+  itemRows.forEach((_, index) => {
+    const li = document.createElement('li');
+    if (index === 0) {
+      li.classList.add('slick-active');
+    }
+    li.setAttribute('role', 'presentation');
+
+    const button = document.createElement('button');
+    button.setAttribute('type', 'button');
+    button.setAttribute('role', 'tab');
+    button.setAttribute('id', `slick-slide-control0${index}`);
+    button.setAttribute('aria-controls', `slick-slide0${index}`);
+    button.setAttribute('aria-label', `${index + 1} of ${itemRows.length}`);
+    button.setAttribute('tabindex', index === 0 ? '0' : '-1');
+    if (index === 0) {
+      button.setAttribute('aria-selected', 'true');
+    }
+    button.textContent = index + 1;
+
+    li.append(button);
+    slickDots.append(li);
+  });
+  carouselContainer.append(slickDots);
+
+  block.innerHTML = '';
+  block.append(carouselContainer);
+
+  // Carousel logic (simplified for EDS, no external Slick library)
+  let currentIndex = 0;
+
+  const updateCarousel = () => {
+    slickTrack.style.transform = `translate3d(-${currentIndex * 100}%, 0px, 0px)`;
+
+    [...slickTrack.children].forEach((item, i) => {
+      item.classList.remove('cmp-carousel__item--active', 'slick-current', 'slick-active');
+      item.setAttribute('aria-hidden', 'true');
+      item.setAttribute('tabindex', '-1');
+      if (i === currentIndex) {
+        item.classList.add('cmp-carousel__item--active', 'slick-current', 'slick-active');
+        item.setAttribute('aria-hidden', 'false');
+        item.setAttribute('tabindex', '0');
+      }
+    });
+
+    [...slickDots.children].forEach((dot, i) => {
+      dot.classList.remove('slick-active');
+      dot.querySelector('button').setAttribute('aria-selected', 'false');
+      dot.querySelector('button').setAttribute('tabindex', '-1');
+      if (i === currentIndex) {
+        dot.classList.add('slick-active');
+        dot.querySelector('button').setAttribute('aria-selected', 'true');
+        dot.querySelector('button').setAttribute('tabindex', '0');
+      }
+    });
+
+    prevButton.setAttribute('aria-disabled', currentIndex === 0);
+    nextButton.setAttribute('aria-disabled', currentIndex === itemRows.length - 1);
+  };
+
+  prevButton.addEventListener('click', () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      updateCarousel();
+    }
+  });
+
+  nextButton.addEventListener('click', () => {
+    if (currentIndex < itemRows.length - 1) {
+      currentIndex++;
+      updateCarousel();
+    }
+  });
+
+  slickDots.querySelectorAll('button').forEach((dotButton, i) => {
+    dotButton.addEventListener('click', () => {
+      currentIndex = i;
+      updateCarousel();
+    });
+  });
+
+  updateCarousel(); // Initial state
+}

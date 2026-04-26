@@ -1,0 +1,110 @@
+import { createOptimizedPicture } from '../../scripts/aem.js';
+import { moveInstrumentation } from '../../scripts/scripts.js';
+
+export default function decorate(block) {
+  const [
+    bgImageDesktopRow,
+    bgImageMobileRow,
+    titleRow,
+    descriptionRow,
+    buttonLinkRow,
+    buttonLabelRow,
+  ] = [...block.children];
+
+  // Create main wrapper for the teaser
+  const cmpTeaser = document.createElement('div');
+  cmpTeaser.classList.add('cmp-teaser', 'cmp-teaser--first-half-center-aligned');
+  moveInstrumentation(block, cmpTeaser);
+
+  // Background Images
+  const desktopPicture = bgImageDesktopRow?.querySelector('picture');
+  const mobilePicture = bgImageMobileRow?.querySelector('picture');
+
+  if (desktopPicture) {
+    const desktopImg = desktopPicture.querySelector('img');
+    const optimizedDesktopPic = createOptimizedPicture(desktopImg.src, desktopImg.alt, false, [{ width: '2000' }]);
+    // We don't append it directly, but use its src for the background-image style
+    const desktopSrc = optimizedDesktopPic.querySelector('img').src;
+    cmpTeaser.style.backgroundImage = `url("${desktopSrc}")`;
+    // Add the picture to the block for instrumentation and potential responsive image handling
+    // but keep it hidden if CSS handles it via background-image
+    const desktopPictureWrapper = document.createElement('div');
+    desktopPictureWrapper.classList.add('cmp-teaser__background-image-desktop');
+    desktopPictureWrapper.append(optimizedDesktopPic);
+    desktopPictureWrapper.style.display = 'none'; // Hide if CSS background-image is preferred
+    cmpTeaser.append(desktopPictureWrapper);
+    moveInstrumentation(bgImageDesktopRow, desktopPictureWrapper);
+  }
+
+  if (mobilePicture) {
+    const mobileImg = mobilePicture.querySelector('img');
+    const optimizedMobilePic = createOptimizedPicture(mobileImg.src, mobileImg.alt, false, [{ width: '750' }]);
+    const mobileSrc = optimizedMobilePic.querySelector('img').src;
+    // Add the picture to the block for instrumentation and potential responsive image handling
+    const mobilePictureWrapper = document.createElement('div');
+    mobilePictureWrapper.classList.add('cmp-teaser__background-image-mobile');
+    mobilePictureWrapper.append(optimizedMobilePic);
+    mobilePictureWrapper.style.display = 'none'; // Hide if CSS background-image is preferred
+    cmpTeaser.append(mobilePictureWrapper);
+    moveInstrumentation(bgImageMobileRow, mobilePictureWrapper);
+
+    // For responsive background, we might want to add a media query listener or rely on CSS
+    // For now, only desktop is set as inline style. Responsive CSS should handle mobile.
+  }
+
+  // Content wrapper
+  const content = document.createElement('div');
+  content.classList.add('cmp-teaser__content');
+  cmpTeaser.append(content);
+
+  // Title
+  const titleText = titleRow?.textContent.trim();
+  if (titleText) {
+    const title = document.createElement('h2');
+    title.classList.add('cmp-teaser__title');
+    title.textContent = titleText;
+    content.append(title);
+    moveInstrumentation(titleRow, title);
+  }
+
+  // Description
+  const descriptionHtml = descriptionRow?.innerHTML;
+  if (descriptionHtml) {
+    const description = document.createElement('div');
+    description.classList.add('cmp-teaser__description');
+    description.innerHTML = descriptionHtml;
+    content.append(description);
+    moveInstrumentation(descriptionRow, description);
+  }
+
+  // Button
+  const buttonLink = buttonLinkRow?.querySelector('a');
+  const buttonLabel = buttonLabelRow?.textContent.trim();
+
+  if (buttonLink && buttonLabel) {
+    const actionContainer = document.createElement('div');
+    actionContainer.classList.add('cmp-teaser__action-container');
+
+    const buttonDiv = document.createElement('div');
+    buttonDiv.classList.add('button', 'cmp-button--primary-anchor', 'cmp-button--primary-anchor-light');
+
+    const anchor = document.createElement('a');
+    anchor.classList.add('cmp-button');
+    anchor.href = buttonLink.href;
+
+    const span = document.createElement('span');
+    span.classList.add('cmp-button__text');
+    span.textContent = buttonLabel;
+
+    anchor.append(span);
+    buttonDiv.append(anchor);
+    actionContainer.append(buttonDiv);
+    content.append(actionContainer);
+
+    moveInstrumentation(buttonLinkRow, anchor);
+    moveInstrumentation(buttonLabelRow, span);
+  }
+
+  block.innerHTML = '';
+  block.append(cmpTeaser);
+}
