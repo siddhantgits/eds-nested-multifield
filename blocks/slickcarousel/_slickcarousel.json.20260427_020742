@@ -1,0 +1,109 @@
+{
+  "definitions": [
+    {
+      "title": "Slickcarousel",
+      "id": "slickcarousel",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "filter": "slickcarousel",
+              "model": "slickcarousel",
+              "name": "Slickcarousel"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Banner-Item",
+      "id": "banner-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "banner-item",
+              "name": "Banner-Item"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "slickcarousel",
+      "fields": [
+        {
+          "component": "container",
+          "item": "banner-item",
+          "label": "Banners",
+          "name": "banners"
+        }
+      ]
+    },
+    {
+      "id": "banner-item",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Logo",
+          "name": "logo",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Logo Alt Text",
+          "name": "logoAltText",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Banner Title",
+          "name": "title",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Banner Subtitle",
+          "name": "subtitle",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "label": "Desktop Banner Image",
+          "name": "desktopImage",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "label": "Mobile Banner Image",
+          "name": "mobileImage",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Button Link",
+          "name": "buttonLink",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Button Label",
+          "name": "buttonLabel",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "slickcarousel",
+      "components": [
+        "banner-item"
+      ]
+    }
+  ]
+}

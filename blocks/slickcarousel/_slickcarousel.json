@@ -1,0 +1,97 @@
+{
+  "definitions": [
+    {
+      "title": "Slickcarousel",
+      "id": "slickcarousel",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "filter": "slickcarousel",
+              "model": "slickcarousel",
+              "name": "Slickcarousel"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Carousel Slide",
+      "id": "carousel-slide",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "carousel-slide",
+              "name": "Carousel Slide"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "slickcarousel",
+      "fields": [
+        {
+          "component": "container",
+          "item": "carousel-slide",
+          "label": "Slides",
+          "name": "slides"
+        }
+      ]
+    },
+    {
+      "id": "carousel-slide",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Background Image (Desktop)",
+          "name": "background-image-desktop",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "label": "Background Image (Mobile)",
+          "name": "background-image-mobile",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Title",
+          "name": "title",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "label": "Description",
+          "name": "description",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Button Label",
+          "name": "button-label",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Button Link",
+          "name": "button-link",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "slickcarousel",
+      "components": [
+        "carousel-slide"
+      ]
+    }
+  ]
+}

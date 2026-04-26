@@ -50,7 +50,17 @@
         "hero",
         "cards",
         "columns",
-        "fragment"
+        "fragment",
+        "cmp-header",
+        "cmp-search",
+        "slickcarousel",
+        "product-category-listing",
+        "aashirvaad-video-teaser",
+        "recipe-group",
+        "teaser",
+        "our-foot-print",
+        "container",
+        "footer"
       ]
     }
   ]

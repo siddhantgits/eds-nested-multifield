@@ -1,0 +1,85 @@
+{
+  "definitions": [
+    {
+      "title": "Our-Foot-Print",
+      "id": "our-foot-print",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "filter": "our-foot-print",
+              "model": "our-foot-print",
+              "name": "Our-Foot-Print"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Footprint-Card",
+      "id": "footprint-card",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "footprint-card",
+              "name": "Footprint-Card"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "our-foot-print",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Section Title",
+          "name": "title",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "footprint-card",
+          "label": "Footprint Cards",
+          "name": "cards"
+        }
+      ]
+    },
+    {
+      "id": "footprint-card",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "YouTube Video URL",
+          "name": "video",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Card Title",
+          "name": "title",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Card Description",
+          "name": "description",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "our-foot-print",
+      "components": [
+        "footprint-card"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,227 @@
+import { createOptimizedPicture } from '../../scripts/aem.js';
+import { moveInstrumentation } from '../../scripts/scripts.js';
+
+export default function decorate(block) {
+  const carouselContainer = document.createElement('div');
+  carouselContainer.classList.add('cmp-carousel__container', 'slick-initialized', 'slick-slider', 'slick-dotted');
+  carouselContainer.setAttribute('data-slick', '4');
+  carouselContainer.setAttribute('aria-atomic', 'false');
+
+  const slickList = document.createElement('div');
+  slickList.classList.add('slick-list', 'draggable');
+
+  const slickTrack = document.createElement('div');
+  slickTrack.classList.add('slick-track');
+  slickTrack.style.opacity = '1';
+
+  const dotsContainer = document.createElement('ul');
+  dotsContainer.classList.add('slick-dots');
+  dotsContainer.setAttribute('role', 'tablist');
+
+  const bannerItems = [...block.children];
+  block.innerHTML = ''; // Clear the original block content
+
+  bannerItems.forEach((row, index) => {
+    const [logoCell, logoAltTextCell, titleCell, subtitleCell, desktopImageCell, mobileImageCell, buttonLinkCell, buttonLabelCell] = [...row.children];
+
+    const item = document.createElement('div');
+    item.classList.add('cmp-carousel__item', 'slick-slide');
+    item.setAttribute('id', `slick-slide0${index}`);
+    item.setAttribute('role', 'tabpanel');
+    item.setAttribute('aria-labelledby', `slickcarousel-45c1cf16aa-item-${index}-tab`);
+    item.setAttribute('aria-roledescription', 'slide');
+    item.setAttribute('aria-label', `Slide ${index + 1} of ${bannerItems.length}`);
+    item.setAttribute('data-slick-index', index.toString());
+    item.setAttribute('aria-hidden', index !== 0);
+    item.setAttribute('tabindex', index === 0 ? '0' : '-1');
+    item.setAttribute('aria-describedby', `slick-slide-control0${index}`);
+
+    const bannerDiv = document.createElement('div');
+    bannerDiv.classList.add('banner', 'cmp-banner--logo');
+
+    const cmpBanner = document.createElement('div');
+    cmpBanner.classList.add('cmp-banner');
+    cmpBanner.setAttribute('data-component', 'banner');
+    cmpBanner.setAttribute('data-initialized', 'true');
+
+    const cmpBannerContent = document.createElement('div');
+    cmpBannerContent.classList.add('cmp-banner__content');
+
+    // Logo
+    const logoDiv = document.createElement('div');
+    logoDiv.classList.add('cmp-banner__item-logo');
+    const logoPicture = logoCell.querySelector('picture');
+    if (logoPicture) {
+      const logoImg = logoPicture.querySelector('img');
+      const optimizedLogo = createOptimizedPicture(logoImg.src, logoAltTextCell?.textContent.trim() || logoImg.alt, false, [{ width: '100' }]);
+      moveInstrumentation(logoImg, optimizedLogo.querySelector('img'));
+      logoDiv.append(optimizedLogo);
+    }
+    cmpBannerContent.append(logoDiv);
+
+    // Title
+    const title = document.createElement('h2');
+    title.classList.add('cmp-banner__title');
+    title.textContent = titleCell?.textContent.trim() || '';
+    cmpBannerContent.append(title);
+
+    // Subtitle
+    const subtitle = document.createElement('h3');
+    subtitle.classList.add('cmp-banner__sub-title');
+    subtitle.textContent = subtitleCell?.textContent.trim() || '';
+    cmpBannerContent.append(subtitle);
+
+    // Images
+    const pictureElement = document.createElement('picture');
+    pictureElement.classList.add('w-100', 'd-block');
+
+    const mobileImg = mobileImageCell.querySelector('img');
+    if (mobileImg) {
+      const sourceMobile = document.createElement('source');
+      sourceMobile.setAttribute('media', '(max-width: 600px)');
+      sourceMobile.srcset = mobileImg.src;
+      pictureElement.append(sourceMobile);
+    }
+
+    const desktopImg = desktopImageCell.querySelector('img');
+    if (desktopImg) {
+      const img = document.createElement('img');
+      img.src = desktopImg.src;
+      img.alt = desktopImg.alt;
+      img.classList.add('cmp-banner__image', 'w-100', 'd-block');
+      pictureElement.append(img);
+    }
+    cmpBannerContent.append(pictureElement);
+
+    // Button
+    const buttonDiv = document.createElement('div');
+    buttonDiv.classList.add('null', 'button', 'cmp-button--primary-anchor');
+    const buttonLink = buttonLinkCell.querySelector('a');
+    if (buttonLink) {
+      const anchor = document.createElement('a');
+      anchor.classList.add('cmp-button');
+      anchor.href = buttonLink.href;
+      anchor.setAttribute('tabindex', index === 0 ? '0' : '-1');
+      const span = document.createElement('span');
+      span.classList.add('cmp-button__text');
+      span.textContent = buttonLabelCell?.textContent.trim() || '';
+      anchor.append(span);
+      moveInstrumentation(buttonLink, anchor);
+      buttonDiv.append(anchor);
+    }
+    cmpBannerContent.append(buttonDiv);
+
+    cmpBanner.append(cmpBannerContent);
+    bannerDiv.append(cmpBanner);
+    item.append(bannerDiv);
+    slickTrack.append(item);
+    moveInstrumentation(row, item);
+
+    // Dots
+    const dotLi = document.createElement('li');
+    dotLi.setAttribute('role', 'presentation');
+    if (index === 0) dotLi.classList.add('slick-active');
+    const dotButton = document.createElement('button');
+    dotButton.setAttribute('type', 'button');
+    dotButton.setAttribute('role', 'tab');
+    dotButton.setAttribute('id', `slick-slide-control0${index}`);
+    dotButton.setAttribute('aria-controls', `slick-slide0${index}`);
+    dotButton.setAttribute('aria-label', `${index + 1} of ${bannerItems.length}`);
+    dotButton.setAttribute('tabindex', index === 0 ? '0' : '-1');
+    dotButton.setAttribute('aria-selected', index === 0);
+    dotButton.textContent = (index + 1).toString();
+    dotLi.append(dotButton);
+    dotsContainer.append(dotLi);
+  });
+
+  slickList.append(slickTrack);
+  carouselContainer.append(slickList);
+
+  // Prev/Next buttons
+  const prevButton = document.createElement('button');
+  prevButton.classList.add('slick-prev', 'slick-arrow', 'slick-disabled');
+  prevButton.setAttribute('aria-label', 'Previous');
+  prevButton.setAttribute('type', 'button');
+  prevButton.setAttribute('aria-disabled', 'true');
+  prevButton.textContent = 'Previous';
+
+  const nextButton = document.createElement('button');
+  nextButton.classList.add('slick-next', 'slick-arrow');
+  nextButton.setAttribute('aria-label', 'Next');
+  nextButton.setAttribute('type', 'button');
+  nextButton.setAttribute('aria-disabled', 'false');
+  nextButton.textContent = 'Next';
+
+  carouselContainer.prepend(prevButton);
+  carouselContainer.append(nextButton);
+  carouselContainer.append(dotsContainer);
+
+  const mainCarouselDiv = document.createElement('div');
+  mainCarouselDiv.classList.add('cmp-carousel');
+  mainCarouselDiv.setAttribute('data-placeholder-text', 'false');
+  mainCarouselDiv.setAttribute('data-cmp-is', 'carousel');
+  mainCarouselDiv.setAttribute('data-show-infinite-scroll', 'false');
+  mainCarouselDiv.setAttribute('data-show-arrows', 'true');
+  mainCarouselDiv.setAttribute('data-show-dots', 'true');
+  mainCarouselDiv.setAttribute('data-item-count-per-slide', '1');
+  mainCarouselDiv.setAttribute('data-auto-play-is-enabled', 'false');
+  mainCarouselDiv.setAttribute('data-auto-play-speed-in-ms', '2000');
+  mainCarouselDiv.setAttribute('data-reveal-next-item-partially', 'false');
+  mainCarouselDiv.setAttribute('data-component', 'carousel');
+  mainCarouselDiv.append(carouselContainer);
+
+  block.classList.add('carousel', 'panelcontainer', 'main-banner');
+  block.append(mainCarouselDiv);
+
+  let currentSlide = 0;
+  const totalSlides = bannerItems.length;
+
+  const updateCarousel = () => {
+    slickTrack.style.transform = `translate3d(-${currentSlide * 100}%, 0px, 0px)`;
+
+    [...slickTrack.children].forEach((slide, i) => {
+      slide.classList.toggle('slick-current', i === currentSlide);
+      slide.classList.toggle('slick-active', i === currentSlide);
+      slide.setAttribute('aria-hidden', i !== currentSlide);
+      slide.setAttribute('tabindex', i === currentSlide ? '0' : '-1');
+    });
+
+    [...dotsContainer.children].forEach((dot, i) => {
+      dot.classList.toggle('slick-active', i === currentSlide);
+      dot.querySelector('button').setAttribute('tabindex', i === currentSlide ? '0' : '-1');
+      dot.querySelector('button').setAttribute('aria-selected', i === currentSlide);
+    });
+
+    prevButton.classList.toggle('slick-disabled', currentSlide === 0);
+    prevButton.setAttribute('aria-disabled', currentSlide === 0);
+    nextButton.classList.toggle('slick-disabled', currentSlide === totalSlides - 1);
+    nextButton.setAttribute('aria-disabled', currentSlide === totalSlides - 1);
+  };
+
+  prevButton.addEventListener('click', () => {
+    if (currentSlide > 0) {
+      currentSlide--;
+      updateCarousel();
+    }
+  });
+
+  nextButton.addEventListener('click', () => {
+    if (currentSlide < totalSlides - 1) {
+      currentSlide++;
+      updateCarousel();
+    }
+  });
+
+  dotsContainer.addEventListener('click', (e) => {
+    const button = e.target.closest('button');
+    if (button) {
+      const newSlide = parseInt(button.getAttribute('aria-label').split(' ')[0], 10) - 1;
+      if (newSlide !== currentSlide) {
+        currentSlide = newSlide;
+        updateCarousel();
+      }
+    }
+  });
+
+  updateCarousel(); // Initialize carousel state
+}

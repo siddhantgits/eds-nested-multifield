@@ -1,0 +1,115 @@
+import { createOptimizedPicture } from '../../scripts/aem.js';
+import { moveInstrumentation } from '../../scripts/scripts.js';
+
+export default function decorate(block) {
+  const carouselContainer = document.createElement('div');
+  carouselContainer.classList.add('cmp-carousel', 'cmp-carousel__container');
+  moveInstrumentation(block, carouselContainer);
+
+  const carouselItems = [...block.children];
+  block.innerHTML = ''; // Clear the block content
+
+  carouselItems.forEach((row) => {
+    const [
+      backgroundImageCell,
+      productLinkCell,
+      productImageCell,
+      productNameCell,
+      productDetailsCell,
+      buttonLabelCell,
+    ] = [...row.children];
+
+    const carouselItem = document.createElement('div');
+    carouselItem.classList.add('cmp-popular-products__carousel-item', 'cmp-carousel__item');
+    moveInstrumentation(row, carouselItem);
+
+    const contentWrapper = document.createElement('div');
+    contentWrapper.classList.add('cmp-popular-products__content-wrapper');
+
+    // Background Image
+    const backgroundImageDiv = document.createElement('div');
+    backgroundImageDiv.classList.add('cmp-popular-products__image');
+    const bgPicture = backgroundImageCell.querySelector('picture');
+    if (bgPicture) {
+      const bgImg = bgPicture.querySelector('img');
+      if (bgImg) {
+        // Use the image src for background-image style directly
+        backgroundImageDiv.style.backgroundImage = `url(${bgImg.src})`;
+      }
+    }
+
+    // Product Link and Image
+    const productLink = productLinkCell.querySelector('a');
+    const productAnchor = document.createElement('a');
+    if (productLink) {
+      productAnchor.href = productLink.href;
+    }
+
+    const lazyImageContainer = document.createElement('div');
+    lazyImageContainer.classList.add('lazy-image-container');
+
+    const productImage = productImageCell.querySelector('picture');
+    if (productImage) {
+      const img = productImage.querySelector('img');
+      if (img) {
+        const optimizedPic = createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]);
+        optimizedPic.classList.add('cmp-popular-products__prod-image', 'lazy-image', 'loaded');
+        moveInstrumentation(img, optimizedPic.querySelector('img'));
+        lazyImageContainer.append(optimizedPic);
+      }
+    }
+    productAnchor.append(lazyImageContainer);
+    backgroundImageDiv.append(productAnchor);
+
+    // Product Description
+    const productDescription = document.createElement('div');
+    productDescription.classList.add('cmp-popular-products__product-description');
+
+    const productName = document.createElement('div');
+    productName.classList.add('cmp-popular-products__product-name');
+    productName.textContent = productNameCell?.textContent.trim() || '';
+    const mobileWeightSpan = document.createElement('span');
+    mobileWeightSpan.classList.add('cmp-popular-products__mobile-weight');
+    productName.append(mobileWeightSpan);
+
+    const quantityContainer = document.createElement('div');
+    quantityContainer.classList.add('cmp-popular-products__quantity-container');
+
+    const productDetails = document.createElement('div');
+    productDetails.classList.add('cmp-popular-products__product-details');
+    productDetails.innerHTML = productDetailsCell?.innerHTML || '';
+
+    const actionDiv = document.createElement('div');
+    actionDiv.classList.add('cmp-popular-products__action');
+
+    const buttonWrapper = document.createElement('div');
+    buttonWrapper.classList.add('button', 'cmp-button--secondary', 'cmp-button--secondary-light');
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.classList.add('cmp-button');
+
+    const buttonText = document.createElement('span');
+    buttonText.classList.add('cmp-button__text');
+    buttonText.textContent = buttonLabelCell?.textContent.trim() || '';
+    button.append(buttonText);
+    buttonWrapper.append(button);
+    actionDiv.append(buttonWrapper);
+
+    productDescription.append(productName, quantityContainer, productDetails, actionDiv);
+    contentWrapper.append(backgroundImageDiv, productDescription);
+    carouselItem.append(contentWrapper);
+    carouselContainer.append(carouselItem);
+  });
+
+  block.append(carouselContainer);
+
+  // Add slickcarousel specific classes to the block itself
+  block.classList.add('carousel', 'panelcontainer');
+
+  // Removed direct jQuery/Slick Carousel initialization.
+  // EDS blocks should only render the HTML structure.
+  // Any external library initialization (like Slick Carousel)
+  // should be handled by a separate script (e.g., aem.js or a dedicated clientlib)
+  // that observes the DOM for elements with specific classes and initializes them.
+}

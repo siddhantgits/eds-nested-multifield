@@ -15,13 +15,41 @@
       "hero",
       "cards",
       "columns",
-      "fragment"
+      "fragment",
+      "cmp-header",
+      "cmp-search",
+      "slickcarousel",
+      "product-category-listing",
+      "aashirvaad-video-teaser",
+      "recipe-group",
+      "teaser",
+      "our-foot-print",
+      "container",
+      "footer"
     ]
+  },
+  {
+    "id": "aashirvaad-video-teaser"
   },
   {
     "id": "cards",
     "components": [
       "card"
+    ]
+  },
+  {
+    "id": "cmp-header",
+    "components": [
+      "navigation-item",
+      "policy-link-item",
+      "social-link-item",
+      "nav-icon-item"
+    ]
+  },
+  {
+    "id": "cmp-search",
+    "components": [
+      "search-category-item"
     ]
   },
   {
@@ -38,5 +66,47 @@
       "button",
       "title"
     ]
+  },
+  {
+    "id": "container",
+    "components": [
+      "text-item",
+      "button-item"
+    ]
+  },
+  {
+    "id": "footer",
+    "components": [
+      "footer-navigation-item",
+      "footer-social-item"
+    ]
+  },
+  {
+    "id": "our-foot-print",
+    "components": [
+      "footprint-card"
+    ]
+  },
+  {
+    "id": "product-category-listing",
+    "components": [
+      "category-item"
+    ]
+  },
+  {
+    "id": "recipe-group",
+    "components": [
+      "recipe-tab",
+      "recipe-card"
+    ]
+  },
+  {
+    "id": "slickcarousel",
+    "components": [
+      "carousel-slide"
+    ]
+  },
+  {
+    "id": "teaser"
   }
 ]

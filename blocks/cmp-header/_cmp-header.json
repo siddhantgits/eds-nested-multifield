@@ -1,0 +1,214 @@
+{
+  "definitions": [
+    {
+      "title": "CMP Header",
+      "id": "cmp-header",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "filter": "cmp-header",
+              "model": "cmp-header",
+              "name": "CMP Header"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Navigation Item",
+      "id": "navigation-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "navigation-item",
+              "name": "Navigation Item"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Policy Link Item",
+      "id": "policy-link-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "policy-link-item",
+              "name": "Policy Link Item"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Social Link Item",
+      "id": "social-link-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "social-link-item",
+              "name": "Social Link Item"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Nav Icon Item",
+      "id": "nav-icon-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "nav-icon-item",
+              "name": "Nav Icon Item"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "cmp-header",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Logo",
+          "name": "logo",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Logo Link",
+          "name": "logo-link",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "navigation-item",
+          "label": "Navigation Menu",
+          "name": "navigation-menu"
+        },
+        {
+          "component": "container",
+          "item": "policy-link-item",
+          "label": "Policy Links",
+          "name": "policy-links"
+        },
+        {
+          "component": "container",
+          "item": "social-link-item",
+          "label": "Social Media Links",
+          "name": "social-links"
+        },
+        {
+          "component": "container",
+          "item": "nav-icon-item",
+          "label": "Header Nav Icons",
+          "name": "nav-icons"
+        }
+      ]
+    },
+    {
+      "id": "navigation-item",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Menu Label",
+          "name": "label",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Menu Link",
+          "name": "link",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "label": "Navigation Hierarchy",
+          "name": "hierarchy-tree",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "policy-link-item",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Policy Link Label",
+          "name": "label",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Policy Link",
+          "name": "link",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "social-link-item",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Social Platform",
+          "name": "platform",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Social Link",
+          "name": "link",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "nav-icon-item",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Icon Type",
+          "name": "icon-type",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Icon Link",
+          "name": "link",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Icon Label",
+          "name": "label",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "cmp-header",
+      "components": [
+        "navigation-item",
+        "policy-link-item",
+        "social-link-item",
+        "nav-icon-item"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+import { createOptimizedPicture } from '../../scripts/aem.js';
+import { moveInstrumentation } from '../../scripts/scripts.js';
+
+export default function decorate(block) {
+  const [
+    backgroundImageDesktopCell,
+    backgroundImageMobileCell,
+    titleCell,
+    descriptionCell,
+    actionLinkCell,
+    actionLabelCell,
+  ] = [...block.children];
+
+  const teaserDiv = document.createElement('div');
+  teaserDiv.classList.add('cmp-teaser');
+  moveInstrumentation(block, teaserDiv);
+
+  // Background Image (Desktop)
+  const desktopPicture = backgroundImageDesktopCell?.querySelector('picture');
+  if (desktopPicture) {
+    const img = desktopPicture.querySelector('img');
+    // Ensure the class name is taken from the ORIGINAL HTML if applicable, or a standard EDS class
+    const optimizedPic = createOptimizedPicture(img.src, img.alt, false, [{ width: '2000' }]);
+    optimizedPic.classList.add('cmp-teaser__image', 'cmp-teaser__image--desktop'); // Using classes from original HTML or standard EDS
+    moveInstrumentation(img, optimizedPic.querySelector('img'));
+    teaserDiv.appendChild(optimizedPic);
+  }
+
+  // Background Image (Mobile)
+  const mobilePicture = backgroundImageMobileCell?.querySelector('picture');
+  if (mobilePicture) {
+    const img = mobilePicture.querySelector('img');
+    // Ensure the class name is taken from the ORIGINAL HTML if applicable, or a standard EDS class
+    const optimizedPic = createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]);
+    optimizedPic.classList.add('cmp-teaser__image', 'cmp-teaser__image--mobile'); // Using classes from original HTML or standard EDS
+    moveInstrumentation(img, optimizedPic.querySelector('img'));
+    teaserDiv.appendChild(optimizedPic);
+  }
+
+  const contentDiv = document.createElement('div');
+  contentDiv.classList.add('cmp-teaser__content');
+
+  // Title
+  const titleText = titleCell?.textContent.trim();
+  if (titleText) {
+    const titleElement = document.createElement('h2');
+    titleElement.classList.add('cmp-teaser__title');
+    titleElement.textContent = titleText;
+    moveInstrumentation(titleCell, titleElement);
+    contentDiv.appendChild(titleElement);
+  }
+
+  // Description
+  const descriptionHtml = descriptionCell?.innerHTML;
+  if (descriptionHtml) {
+    const descriptionElement = document.createElement('div');
+    descriptionElement.classList.add('cmp-teaser__description');
+    descriptionElement.innerHTML = descriptionHtml;
+    moveInstrumentation(descriptionCell, descriptionElement);
+    contentDiv.appendChild(descriptionElement);
+  }
+
+  // Action Link and Label
+  const actionLink = actionLinkCell?.querySelector('a');
+  const actionLabel = actionLabelCell?.textContent.trim();
+
+  if (actionLink && actionLabel) {
+    const actionContainer = document.createElement('div');
+    actionContainer.classList.add('cmp-teaser__action-container');
+
+    const buttonDiv = document.createElement('div');
+    // Classes from ORIGINAL HTML
+    buttonDiv.classList.add('button', 'cmp-button--primary-anchor', 'cmp-button--primary-anchor-light');
+
+    const anchor = document.createElement('a');
+    anchor.classList.add('cmp-button'); // Class from ORIGINAL HTML
+    anchor.href = actionLink.href;
+
+    const span = document.createElement('span');
+    span.classList.add('cmp-button__text'); // Class from ORIGINAL HTML
+    span.textContent = actionLabel;
+    anchor.appendChild(span);
+
+    moveInstrumentation(actionLinkCell, anchor);
+    moveInstrumentation(actionLabelCell, span);
+
+    buttonDiv.appendChild(anchor);
+    actionContainer.appendChild(buttonDiv);
+    contentDiv.appendChild(actionContainer);
+  }
+
+  teaserDiv.appendChild(contentDiv);
+
+  block.innerHTML = '';
+  // The block-level class 'cmp-teaser--first-half-center-aligned' is already present in the ORIGINAL HTML
+  // and should be handled by the CSS, not explicitly added here unless it's a dynamic state.
+  // Assuming it's a static class from the original HTML, it should already be on the block.
+  // If it's not on the block initially, it means it's a dynamic class that needs to be added.
+  // For now, removing it as it's typically part of the initial block structure.
+  // If the block needs to dynamically add this class, it should be based on content or configuration.
+
+  block.appendChild(teaserDiv);
+
+  // The block.querySelectorAll('picture > img') loop for optimization is redundant
+  // because createOptimizedPicture is already called for the background images.
+  // If there are other images within the block that need optimization, they should be handled
+  // explicitly based on their content and context, not a generic loop that might
+  // re-optimize already optimized images or interfere with background images.
+  // Removing this generic optimization loop.
+}

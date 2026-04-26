@@ -1,0 +1,115 @@
+{
+  "definitions": [
+    {
+      "title": "Cmp-Search",
+      "id": "cmp-search",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "filter": "cmp-search",
+              "model": "cmp-search",
+              "name": "Cmp-Search"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Search-Category-Item",
+      "id": "search-category-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "search-category-item",
+              "name": "Search-Category-Item"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "cmp-search",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Minimum Search Length",
+          "name": "minLength",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Results Desktop Size",
+          "name": "resultsDesktopSize",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Results Mobile Size",
+          "name": "resultsMobileSize",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "No Results Title",
+          "name": "noResultsTitle",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "No Results Description",
+          "name": "noResultsDescription",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Input Placeholder",
+          "name": "inputPlaceholder",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Search Action Endpoint",
+          "name": "searchAction",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "search-category-item",
+          "label": "Categories",
+          "name": "categories"
+        }
+      ]
+    },
+    {
+      "id": "search-category-item",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Category Name",
+          "name": "categoryName",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Category URL",
+          "name": "categoryURL",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "cmp-search",
+      "components": [
+        "search-category-item"
+      ]
+    }
+  ]
+}
