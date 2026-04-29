@@ -60,7 +60,15 @@
         "teaser",
         "our-foot-print",
         "container",
-        "footer"
+        "footer",
+        "uco-c-header",
+        "media-strip",
+        "uol-c-section",
+        "uol-c-logo-strip",
+        "sustainability-section",
+        "uol-hero-search",
+        "feature-media-cta",
+        "uco-c-footer"
       ]
     }
   ]

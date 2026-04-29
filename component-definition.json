@@ -297,6 +297,37 @@
           }
         },
         {
+          "title": "Feature-Media-CTA",
+          "id": "feature-media-cta",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "filter": "feature-media-cta",
+                  "model": "feature-media-cta",
+                  "name": "Feature-Media-CTA"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Feature-Action-Item",
+          "id": "feature-action-item",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "model": "feature-action-item",
+                  "name": "Feature-Action-Item"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Footer",
           "id": "footer",
           "plugins": {
@@ -367,6 +398,22 @@
                 "template": {
                   "name": "Hero",
                   "model": "hero"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Media-Strip",
+          "id": "media-strip",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "filter": "media-strip",
+                  "model": "media-strip",
+                  "name": "Media-Strip"
                 }
               }
             }
@@ -512,6 +559,37 @@
           }
         },
         {
+          "title": "Sustainability Section",
+          "id": "sustainability-section",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "filter": "sustainability-section",
+                  "model": "sustainability-section",
+                  "name": "Sustainability Section"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Sustainability Card",
+          "id": "sustainability-card",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "model": "sustainability-card",
+                  "name": "Sustainability Card"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Teaser",
           "id": "teaser",
           "plugins": {
@@ -522,6 +600,221 @@
                   "filter": "teaser",
                   "model": "teaser",
                   "name": "Teaser"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "UCO-C-Footer",
+          "id": "uco-c-footer",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "filter": "uco-c-footer",
+                  "model": "uco-c-footer",
+                  "name": "UCO-C-Footer"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Page-Share-Item",
+          "id": "page-share-item",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "model": "page-share-item",
+                  "name": "Page-Share-Item"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Connect-Item",
+          "id": "connect-item",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "model": "connect-item",
+                  "name": "Connect-Item"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Footer-Menu-Item",
+          "id": "footer-menu-item",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "model": "footer-menu-item",
+                  "name": "Footer-Menu-Item"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "UCO-C-Header",
+          "id": "uco-c-header",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "filter": "uco-c-header",
+                  "model": "uco-c-header",
+                  "name": "UCO-C-Header"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Theme-Option-Item",
+          "id": "theme-option-item",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "model": "theme-option-item",
+                  "name": "Theme-Option-Item"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Navigation-Item",
+          "id": "navigation-item",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "model": "navigation-item",
+                  "name": "Navigation-Item"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Sub-Menu-Card-Item",
+          "id": "sub-menu-card-item",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "model": "sub-menu-card-item",
+                  "name": "Sub-Menu-Card-Item"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Sub-Menu-Link-Item",
+          "id": "sub-menu-link-item",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "model": "sub-menu-link-item",
+                  "name": "Sub-Menu-Link-Item"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "UOL-C-Logo-Strip",
+          "id": "uol-c-logo-strip",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "filter": "uol-c-logo-strip",
+                  "model": "uol-c-logo-strip",
+                  "name": "UOL-C-Logo-Strip"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "UOL-C-Logo-Item",
+          "id": "uol-c-logo-item",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "model": "uol-c-logo-item",
+                  "name": "UOL-C-Logo-Item"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Uol-C-Section",
+          "id": "uol-c-section",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "filter": "uol-c-section",
+                  "model": "uol-c-section",
+                  "name": "Uol-C-Section"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Uol-C-Section-Swimlane-Item",
+          "id": "uol-c-section-swimlane-item",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "model": "uol-c-section-swimlane-item",
+                  "name": "Uol-C-Section-Swimlane-Item"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Uol-Hero-Search",
+          "id": "uol-hero-search",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "filter": "uol-hero-search",
+                  "model": "uol-hero-search",
+                  "name": "Uol-Hero-Search"
                 }
               }
             }

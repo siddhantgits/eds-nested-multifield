@@ -25,7 +25,15 @@
       "teaser",
       "our-foot-print",
       "container",
-      "footer"
+      "footer",
+      "uco-c-header",
+      "media-strip",
+      "uol-c-section",
+      "uol-c-logo-strip",
+      "sustainability-section",
+      "uol-hero-search",
+      "feature-media-cta",
+      "uco-c-footer"
     ]
   },
   {
@@ -75,11 +83,21 @@
     ]
   },
   {
+    "id": "feature-media-cta",
+    "components": [
+      "feature-action-item"
+    ]
+  },
+  {
     "id": "footer",
     "components": [
       "footer-navigation-item",
       "footer-social-item"
     ]
+  },
+  {
+    "id": "media-strip",
+    "components": []
   },
   {
     "id": "our-foot-print",
@@ -107,6 +125,45 @@
     ]
   },
   {
+    "id": "sustainability-section",
+    "components": [
+      "sustainability-card"
+    ]
+  },
+  {
     "id": "teaser"
+  },
+  {
+    "id": "uco-c-footer",
+    "components": [
+      "page-share-item",
+      "connect-item",
+      "footer-menu-item"
+    ]
+  },
+  {
+    "id": "uco-c-header",
+    "components": [
+      "theme-option-item",
+      "navigation-item",
+      "sub-menu-card-item",
+      "sub-menu-link-item"
+    ]
+  },
+  {
+    "id": "uol-c-logo-strip",
+    "components": [
+      "uol-c-logo-item"
+    ]
+  },
+  {
+    "id": "uol-c-section",
+    "components": [
+      "uol-c-section-swimlane-item"
+    ]
+  },
+  {
+    "id": "uol-hero-search",
+    "components": []
   }
 ]

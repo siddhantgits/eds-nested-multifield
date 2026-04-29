@@ -427,6 +427,58 @@
     ]
   },
   {
+    "id": "feature-media-cta",
+    "fields": [
+      {
+        "component": "reference",
+        "label": "Feature Image",
+        "name": "image",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Feature Image Alt",
+        "name": "imageAlt",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Eyebrow",
+        "name": "eyebrow",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Title",
+        "name": "title",
+        "valueType": "string"
+      },
+      {
+        "component": "container",
+        "item": "feature-action-item",
+        "label": "CTA Actions",
+        "name": "actions"
+      }
+    ]
+  },
+  {
+    "id": "feature-action-item",
+    "fields": [
+      {
+        "component": "text",
+        "label": "Button Label",
+        "name": "label",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "label": "Button Link",
+        "name": "link",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
     "id": "footer",
     "fields": [
       {
@@ -599,6 +651,23 @@
         "name": "text",
         "value": "",
         "label": "Text",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "media-strip",
+    "fields": [
+      {
+        "component": "reference",
+        "label": "Image",
+        "name": "image",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Image Alt Text",
+        "name": "altText",
         "valueType": "string"
       }
     ]
@@ -829,6 +898,76 @@
     ]
   },
   {
+    "id": "sustainability-section",
+    "fields": [
+      {
+        "component": "text",
+        "label": "Eyebrow",
+        "name": "eyebrow",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Title",
+        "name": "title",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "label": "Footer Link",
+        "name": "footerLink",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Footer Label",
+        "name": "footerLabel",
+        "valueType": "string"
+      },
+      {
+        "component": "container",
+        "item": "sustainability-card",
+        "label": "Cards",
+        "name": "cards"
+      }
+    ]
+  },
+  {
+    "id": "sustainability-card",
+    "fields": [
+      {
+        "component": "reference",
+        "label": "Card Image",
+        "name": "image",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Image Alt Text",
+        "name": "imageAlt",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Card Title",
+        "name": "title",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "label": "Card Link",
+        "name": "link",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "label": "Card Body",
+        "name": "body",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
     "id": "teaser",
     "fields": [
       {
@@ -853,6 +992,460 @@
         "component": "text",
         "label": "Button Label",
         "name": "button-label",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "uco-c-footer",
+    "fields": [
+      {
+        "component": "reference",
+        "label": "Page Share Header Icon",
+        "name": "pageShareHeaderIcon",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Page Share Title",
+        "name": "pageShareTitle",
+        "valueType": "string"
+      },
+      {
+        "component": "container",
+        "item": "page-share-item",
+        "label": "Page Share Items",
+        "name": "pageShareItems"
+      },
+      {
+        "component": "text",
+        "label": "Connect Title",
+        "name": "connectTitle",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "label": "Connect Body",
+        "name": "connectBody",
+        "valueType": "string"
+      },
+      {
+        "component": "container",
+        "item": "connect-item",
+        "label": "Connect Items",
+        "name": "connectItems"
+      },
+      {
+        "component": "text",
+        "label": "Contact Title",
+        "name": "contactTitle",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "label": "Contact Body",
+        "name": "contactBody",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "label": "Contact Button Link",
+        "name": "contactButtonLink",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Contact Button Label",
+        "name": "contactButtonLabel",
+        "valueType": "string"
+      },
+      {
+        "component": "container",
+        "item": "footer-menu-item",
+        "label": "Footer Menu Items",
+        "name": "footerMenuItems"
+      },
+      {
+        "component": "reference",
+        "label": "Footer Logo",
+        "name": "footerLogo",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Footer Location",
+        "name": "footerLocation",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Footer Copyright",
+        "name": "footerCopyright",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Cookie Settings Label",
+        "name": "cookieSettingsLabel",
+        "valueType": "string"
+      },
+      {
+        "component": "reference",
+        "label": "Cookie Settings Icon",
+        "name": "cookieSettingsIcon",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "page-share-item",
+    "fields": [
+      {
+        "component": "reference",
+        "label": "Share Icon",
+        "name": "icon",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "label": "Share Link",
+        "name": "link",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Share Label",
+        "name": "label",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "label": "Navigation Hierarchy",
+        "name": "hierarchy-tree",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "connect-item",
+    "fields": [
+      {
+        "component": "reference",
+        "label": "Connect Icon",
+        "name": "icon",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "label": "Connect Link",
+        "name": "link",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Connect Label",
+        "name": "label",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "footer-menu-item",
+    "fields": [
+      {
+        "component": "text",
+        "label": "Menu Label",
+        "name": "label",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "label": "Menu Link",
+        "name": "link",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "uco-c-header",
+    "fields": [
+      {
+        "component": "reference",
+        "label": "Logo",
+        "name": "logo",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "label": "Logo Link",
+        "name": "logo-link",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Location Label",
+        "name": "location-label",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "label": "Location Action Link",
+        "name": "location-action-link",
+        "valueType": "string"
+      },
+      {
+        "component": "container",
+        "item": "theme-option-item",
+        "label": "Theme Options",
+        "name": "theme-options"
+      },
+      {
+        "component": "aem-content",
+        "label": "Theme Help Link",
+        "name": "theme-help-link",
+        "valueType": "string"
+      },
+      {
+        "component": "container",
+        "item": "navigation-item",
+        "label": "Navigation",
+        "name": "navigation"
+      }
+    ]
+  },
+  {
+    "id": "theme-option-item",
+    "fields": [
+      {
+        "component": "reference",
+        "label": "Theme Icon",
+        "name": "icon",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Theme Label",
+        "name": "label",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "label": "Navigation Hierarchy",
+        "name": "hierarchy-tree",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "navigation-item",
+    "fields": [
+      {
+        "component": "text",
+        "label": "Menu Label",
+        "name": "label",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "label": "Menu Link",
+        "name": "link",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "label": "Navigation Hierarchy",
+        "name": "hierarchy-tree",
+        "valueType": "string"
+      },
+      {
+        "component": "container",
+        "item": "sub-menu-card-item",
+        "label": "Sub Menu Cards",
+        "name": "sub-menu-cards"
+      },
+      {
+        "component": "container",
+        "item": "sub-menu-link-item",
+        "label": "Sub Menu Links",
+        "name": "sub-menu-links"
+      }
+    ]
+  },
+  {
+    "id": "sub-menu-card-item",
+    "fields": [
+      {
+        "component": "reference",
+        "label": "Card Image",
+        "name": "image",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Card Title",
+        "name": "title",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "label": "Card Link",
+        "name": "link",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Card Body",
+        "name": "body",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "sub-menu-link-item",
+    "fields": [
+      {
+        "component": "text",
+        "label": "Link Label",
+        "name": "label",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "label": "Link URL",
+        "name": "link",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "uol-c-logo-strip",
+    "fields": [
+      {
+        "component": "container",
+        "item": "uol-c-logo-item",
+        "label": "Logos",
+        "name": "logos"
+      }
+    ]
+  },
+  {
+    "id": "uol-c-logo-item",
+    "fields": [
+      {
+        "component": "reference",
+        "label": "Logo Image",
+        "name": "logo-image",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Alt Text",
+        "name": "alt-text",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "uol-c-section",
+    "fields": [
+      {
+        "component": "text",
+        "label": "Eyebrow",
+        "name": "eyebrow",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Section Title",
+        "name": "title",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "label": "Intro Text",
+        "name": "intro",
+        "valueType": "string"
+      },
+      {
+        "component": "container",
+        "item": "uol-c-section-swimlane-item",
+        "label": "Swimlane Items",
+        "name": "swimlaneItems"
+      }
+    ]
+  },
+  {
+    "id": "uol-c-section-swimlane-item",
+    "fields": [
+      {
+        "component": "reference",
+        "label": "Card Image",
+        "name": "image",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Image Alt Text",
+        "name": "imageAlt",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Card Title",
+        "name": "title",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "label": "Card Link",
+        "name": "link",
+        "valueType": "string"
+      },
+      {
+        "component": "reference",
+        "label": "Icon (Optional)",
+        "name": "icon",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "uol-hero-search",
+    "fields": [
+      {
+        "component": "text",
+        "label": "Search Title",
+        "name": "title",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "label": "Form Action URL",
+        "name": "action",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Input Name",
+        "name": "input-name",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Input Placeholder",
+        "name": "placeholder",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "label": "Submit Button Label",
+        "name": "submit-label",
+        "valueType": "string"
+      },
+      {
+        "component": "reference",
+        "label": "Submit Button Icon",
+        "name": "submit-icon",
         "valueType": "string"
       }
     ]

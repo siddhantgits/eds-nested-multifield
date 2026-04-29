@@ -1,0 +1,171 @@
+import { createOptimizedPicture } from '../../scripts/aem.js';
+import { moveInstrumentation } from '../../scripts/scripts.js';
+
+export default function decorate(block) {
+  const mediaStripInner = document.createElement('div');
+  mediaStripInner.classList.add('uol-c-media-strip__inner');
+
+  [...block.children].forEach((row) => {
+    const [videoSourceCell, posterImageCell, ariaLabelCell, descriptionCell, playIconCell] = [
+      ...row.children,
+    ];
+
+    const videoContainer = document.createElement('div');
+    videoContainer.classList.add(
+      'uol-c-video',
+      'is-mounted',
+      'uol-c-video--controls-y-end',
+      'uol-c-video--controls-x-start',
+      'uol-c-media-strip__media',
+    );
+    videoContainer.setAttribute('data-testid', 'uol-c-media-strip-video');
+
+    const videoEl = document.createElement('video');
+    videoEl.classList.add('uol-c-video__player');
+    videoEl.setAttribute('width', '1600');
+    videoEl.setAttribute('height', '900');
+    videoEl.setAttribute('loop', '');
+    videoEl.setAttribute('muted', '');
+    videoEl.setAttribute('preload', 'none');
+    videoEl.setAttribute('playsinline', 'true');
+    videoEl.setAttribute('data-testid', 'uol-c-video-player');
+    videoEl.setAttribute('autoplay', 'true');
+
+    const ariaLabel = ariaLabelCell?.textContent.trim() || '';
+    const description = descriptionCell?.textContent.trim() || '';
+
+    if (ariaLabel) {
+      videoEl.setAttribute('aria-label', ariaLabel);
+    }
+    if (description) {
+      const descriptionId = `video-description-${ariaLabel.replace(/\s/g, '')}`;
+      videoEl.setAttribute('aria-describedby', descriptionId);
+    }
+
+    const videoSource = videoSourceCell?.querySelector('img');
+    if (videoSource && videoSource.src) {
+      const source = document.createElement('source');
+      source.src = videoSource.src;
+      source.setAttribute('data-testid', 'uol-c-video-source');
+      videoEl.appendChild(source);
+    }
+
+    const posterImage = posterImageCell?.querySelector('img');
+    if (posterImage && posterImage.src) {
+      videoEl.style.setProperty(
+        '--video-poster-url',
+        `url("${posterImage.src}?w=1600&h=900&fit=crop&auto=format")`,
+      );
+    }
+
+    videoContainer.appendChild(videoEl);
+
+    const videoActions = document.createElement('div');
+    videoActions.classList.add('uol-c-video__actions');
+    videoActions.setAttribute('data-testid', 'uol-c-video-actions');
+
+    const playPauseButton = document.createElement('button');
+    playPauseButton.setAttribute('type', 'button');
+    playPauseButton.classList.add(
+      'uol-c-button',
+      'is-icon-only',
+      'is-icon-end',
+      'uol-c-video__action',
+    );
+    playPauseButton.setAttribute('data-testid', 'uol-c-video-action');
+    playPauseButton.setAttribute('aria-live', 'polite');
+
+    const buttonLabel = document.createElement('span');
+    buttonLabel.classList.add('uol-c-button__label', 'uol-u-visually-hidden');
+    buttonLabel.setAttribute('data-testid', 'uol-c-button-label');
+    buttonLabel.textContent = 'Play';
+    playPauseButton.appendChild(buttonLabel);
+
+    const buttonIcon = document.createElement('span');
+    buttonIcon.classList.add('uol-c-button__icon');
+    buttonIcon.setAttribute('data-testid', 'uol-c-button-icon');
+
+    const playIcon = playIconCell?.querySelector('img');
+    if (playIcon) {
+      const playIconImg = document.createElement('img');
+      playIconImg.src = playIcon.src;
+      playIconImg.alt = playIcon.alt || 'Play Icon';
+      buttonIcon.appendChild(playIconImg);
+    }
+    playPauseButton.appendChild(buttonIcon);
+    videoActions.appendChild(playPauseButton);
+    videoContainer.appendChild(videoActions);
+
+    if (description) {
+      const descriptionP = document.createElement('p');
+      descriptionP.id = `video-description-${ariaLabel.replace(/\s/g, '')}`;
+      descriptionP.classList.add('uol-u-visually-hidden');
+      descriptionP.setAttribute('data-testid', 'uol-c-video-description');
+      descriptionP.textContent = description;
+      videoContainer.appendChild(descriptionP);
+    }
+
+    mediaStripInner.appendChild(videoContainer);
+    moveInstrumentation(row, videoContainer);
+
+    // Play/Pause functionality
+    let isPlaying = true; // Video starts autoplaying
+    const updateButton = () => {
+      if (isPlaying) {
+        buttonLabel.textContent = 'Pause';
+        if (playIcon) {
+          // Assuming the playIcon also serves as pause icon or we need to change it
+          // For now, keep the same icon, but in a real scenario, you'd swap it.
+          // playIconImg.src = 'path/to/pause-icon.svg';
+        }
+      } else {
+        buttonLabel.textContent = 'Play';
+        if (playIcon) {
+          // playIconImg.src = playIcon.src; // Revert to play icon
+        }
+      }
+    };
+
+    playPauseButton.addEventListener('click', () => {
+      if (videoEl.paused || videoEl.ended) {
+        videoEl.play();
+        isPlaying = true;
+      } else {
+        videoEl.pause();
+        isPlaying = false;
+      }
+      updateButton();
+    });
+
+    videoEl.addEventListener('play', () => {
+      isPlaying = true;
+      updateButton();
+    });
+    videoEl.addEventListener('pause', () => {
+      isPlaying = false;
+      updateButton();
+    });
+    // Initial state
+    updateButton();
+  });
+
+  block.innerHTML = '';
+  block.classList.add(
+    'uol-c-media-strip',
+    'uol-u-bleed-full',
+    'uol-l-stack-item--gap-none-sibling',
+    'uol-c-media-strip--crop-xl',
+    'uol-c-media-strip--rounded',
+    'uol-c-media-strip--video',
+    'is-mounted',
+  );
+  block.setAttribute('data-testid', 'uol-c-media-strip');
+  block.style.setProperty('--media-strip-z-index', '998');
+  block.appendChild(mediaStripInner);
+
+  block.querySelectorAll('picture > img').forEach((img) => {
+    const optimizedPic = createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]);
+    moveInstrumentation(img, optimizedPic.querySelector('img'));
+    img.closest('picture').replaceWith(optimizedPic);
+  });
+}

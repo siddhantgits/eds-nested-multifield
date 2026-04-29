@@ -1,0 +1,131 @@
+import { createOptimizedPicture } from '../../scripts/aem.js';
+import { moveInstrumentation } from '../../scripts/scripts.js';
+
+export default function decorate(block) {
+  const children = [...block.children];
+
+  const sectionInner = document.createElement('div');
+  sectionInner.classList.add('uol-c-section__inner', 'uol-l-space-block--spacious');
+  sectionInner.setAttribute('data-testid', 'uol-c-section-inner');
+
+  const sectionHeader = document.createElement('header');
+  sectionHeader.classList.add('uol-c-section__header', 'uol-c-section__header--default', 'uol-l-contain--wide', 'uol-l-contain-space--spacious');
+  sectionHeader.setAttribute('data-testid', 'uol-c-section-header');
+
+  const sectionTitleRow = children.shift(); // First row is the title
+  const titleCell = sectionTitleRow.firstElementChild;
+  const h2 = document.createElement('h2');
+  h2.classList.add('uol-c-section__title');
+  h2.setAttribute('data-testid', 'uol-c-section-title');
+  h2.textContent = titleCell?.textContent.trim() || '';
+  moveInstrumentation(sectionTitleRow, h2);
+  sectionHeader.appendChild(h2);
+  sectionInner.appendChild(sectionHeader);
+
+  const sectionMain = document.createElement('div');
+  sectionMain.classList.add('uol-c-section__main', 'uol-l-stack--spacious');
+  sectionMain.setAttribute('data-testid', 'uol-c-section-main');
+
+  const statItems = children.filter((row) => row.children.length === 3);
+  const buttonItems = children.filter((row) => row.children.length === 2);
+
+  if (statItems.length > 0) {
+    const statRowContainer = document.createElement('div');
+    statRowContainer.classList.add('xl:uol-l-contain--extra-wide', 'uol-l-stack--compact');
+
+    const uolCStatRow = document.createElement('div');
+    uolCStatRow.classList.add('uol-c-stat-row', 'uol-l-contain-space--default', 'uol-l-contain--wide', 'uol-c-stat-row--light');
+    uolCStatRow.setAttribute('data-testid', 'uol-c-stat-row');
+    uolCStatRow.setAttribute('large', 'false');
+    uolCStatRow.setAttribute('center', 'true');
+
+    const statList = document.createElement('ul');
+    statList.setAttribute('role', 'list');
+    statList.classList.add('uol-c-stat-row__list');
+
+    statItems.forEach((row) => {
+      const [valueCell, supportingCell, descriptionCell] = [...row.children];
+
+      const li = document.createElement('li');
+      li.classList.add('uol-c-stat-row__stat');
+      li.setAttribute('data-testid', 'uol-c-stat-row-stat');
+
+      const innerDiv = document.createElement('div');
+      innerDiv.classList.add('uol-c-stat-row__stat__inner');
+      innerDiv.setAttribute('role', 'text');
+
+      const statDiv = document.createElement('div');
+      statDiv.classList.add('uol-c-stat', 'uol-c-stat--default', 'uol-c-stat--earth', 'uol-c-stat--fill');
+      statDiv.setAttribute('data-testid', 'uol-c-stat');
+
+      const statContent = document.createElement('p');
+      statContent.classList.add('uol-c-stat__content');
+
+      const statValue = document.createElement('span');
+      statValue.classList.add('uol-c-stat__value');
+      statValue.setAttribute('data-testid', 'uol-c-stat-value');
+      statValue.textContent = valueCell?.textContent.trim() || '';
+
+      const statSupporting = document.createElement('span');
+      statSupporting.classList.add('uol-c-stat__supporting');
+      statSupporting.setAttribute('data-testid', 'uol-c-stat-supporting');
+      statSupporting.textContent = supportingCell?.textContent.trim() || '';
+
+      const statDescription = document.createElement('span');
+      statDescription.classList.add('uol-c-stat__description');
+      statDescription.setAttribute('data-testid', 'uol-c-stat-description');
+
+      const statDescriptionCopy = document.createElement('span');
+      statDescriptionCopy.classList.add('uol-c-stat__description-copy');
+      statDescriptionCopy.textContent = descriptionCell?.textContent.trim() || '';
+
+      statDescription.appendChild(statDescriptionCopy);
+      statContent.append(statValue, statSupporting, statDescription);
+      statDiv.appendChild(statContent);
+      innerDiv.appendChild(statDiv);
+      li.appendChild(innerDiv);
+      statList.appendChild(li);
+      moveInstrumentation(row, li);
+    });
+
+    uolCStatRow.appendChild(statList);
+    statRowContainer.appendChild(uolCStatRow);
+    sectionMain.appendChild(statRowContainer);
+  }
+
+  if (buttonItems.length > 0) {
+    const sectionFooter = document.createElement('div');
+    sectionFooter.classList.add('uol-c-section__footer', 'uol-l-contain-space--spacious', 'uol-l-contain--wide');
+    sectionFooter.setAttribute('data-testid', 'uol-c-section-footer');
+
+    buttonItems.forEach((row) => {
+      const [labelCell, linkCell] = [...row.children];
+
+      const anchor = document.createElement('a');
+      anchor.classList.add('uol-c-button', 'is-inverted', 'uol-c-button--light', 'uol-c-button--rounded', 'uol-c-button--rounded-inline-end');
+      anchor.setAttribute('data-testid', 'uol-c-button');
+
+      const foundLink = linkCell.querySelector('a');
+      if (foundLink) {
+        anchor.href = foundLink.href;
+      }
+
+      const labelSpan = document.createElement('span');
+      labelSpan.classList.add('uol-c-button__label');
+      labelSpan.setAttribute('data-testid', 'uol-c-button-label');
+      labelSpan.textContent = labelCell?.textContent.trim() || '';
+
+      anchor.appendChild(labelSpan);
+      sectionFooter.appendChild(anchor);
+      moveInstrumentation(row, anchor);
+    });
+    sectionMain.appendChild(sectionFooter);
+  }
+
+  sectionInner.appendChild(sectionMain);
+
+  block.innerHTML = '';
+  block.classList.add('uol-c-section', 'uol-c-section--default', 'uol-c-section--rounded');
+  block.setAttribute('data-testid', 'uol-c-section');
+  block.appendChild(sectionInner);
+}

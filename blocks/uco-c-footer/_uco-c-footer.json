@@ -1,0 +1,247 @@
+{
+  "definitions": [
+    {
+      "title": "UCO-C-Footer",
+      "id": "uco-c-footer",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "filter": "uco-c-footer",
+              "model": "uco-c-footer",
+              "name": "UCO-C-Footer"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Page-Share-Item",
+      "id": "page-share-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "page-share-item",
+              "name": "Page-Share-Item"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Connect-Item",
+      "id": "connect-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "connect-item",
+              "name": "Connect-Item"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Footer-Menu-Item",
+      "id": "footer-menu-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "model": "footer-menu-item",
+              "name": "Footer-Menu-Item"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "uco-c-footer",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Page Share Header Icon",
+          "name": "pageShareHeaderIcon",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Page Share Title",
+          "name": "pageShareTitle",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "page-share-item",
+          "label": "Page Share Items",
+          "name": "pageShareItems"
+        },
+        {
+          "component": "text",
+          "label": "Connect Title",
+          "name": "connectTitle",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "label": "Connect Body",
+          "name": "connectBody",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "connect-item",
+          "label": "Connect Items",
+          "name": "connectItems"
+        },
+        {
+          "component": "text",
+          "label": "Contact Title",
+          "name": "contactTitle",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "label": "Contact Body",
+          "name": "contactBody",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Contact Button Link",
+          "name": "contactButtonLink",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Contact Button Label",
+          "name": "contactButtonLabel",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "item": "footer-menu-item",
+          "label": "Footer Menu Items",
+          "name": "footerMenuItems"
+        },
+        {
+          "component": "reference",
+          "label": "Footer Logo",
+          "name": "footerLogo",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Footer Location",
+          "name": "footerLocation",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Footer Copyright",
+          "name": "footerCopyright",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Cookie Settings Label",
+          "name": "cookieSettingsLabel",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "label": "Cookie Settings Icon",
+          "name": "cookieSettingsIcon",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "page-share-item",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Share Icon",
+          "name": "icon",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Share Link",
+          "name": "link",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Share Label",
+          "name": "label",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "label": "Navigation Hierarchy",
+          "name": "hierarchy-tree",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "connect-item",
+      "fields": [
+        {
+          "component": "reference",
+          "label": "Connect Icon",
+          "name": "icon",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Connect Link",
+          "name": "link",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "label": "Connect Label",
+          "name": "label",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "footer-menu-item",
+      "fields": [
+        {
+          "component": "text",
+          "label": "Menu Label",
+          "name": "label",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "label": "Menu Link",
+          "name": "link",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "uco-c-footer",
+      "components": [
+        "page-share-item",
+        "connect-item",
+        "footer-menu-item"
+      ]
+    }
+  ]
+}
